@@ -1,0 +1,8 @@
+2018.8.8
+1.添加 HookProc/UnHookProc 例程，使用类似于DetourAttach/DetourDetach，方便detours的代码移植 
+2.处理Debug版本下导入函数地址为 FF 25 导致hook以后程序崩溃问题
+
+2018.10.9
+由于win7以后Kernel32.dll变成一个空壳，会直接转接跳转到KernelBase.dll，所以真实的Hook地址为KernelBase内部
+1. 独立获取真实地址函数 GetRealProcAddress 函数头部直接跳转（FF 25/E9/EB）或者操作ebp又还原代码部分直接跳过
+2. UnHookProc 例程中，Hook时候生成的转接函数内存删除（或许应该加个延时，以免某个线程正处在这段代码中）

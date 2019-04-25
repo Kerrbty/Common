@@ -1,0 +1,4 @@
+GetModuleInformation		4
+CeSetProcessVersion			2
+GetModuleFileNameExA        4
+GetModuleFileNameExW        4

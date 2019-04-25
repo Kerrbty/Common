@@ -1,0 +1,17 @@
+EXPORTS
+		SetLogFileA   @1
+		SetLogFileW   @2
+		LogPrintA     @3
+		LogPrintW     @4
+		LogOn         @5
+		LogOff        @6
+		IsLogOpen     @7
+		LogClose      @8
+		API_CreateFileA        @100
+		API_CreateFileW        @101
+		API_ReadFile           @102
+		API_WriteFile          @103
+		API_CloseHandle        @104
+		API_SetFilePointer     @105
+		API_SetFilePointerEx   @106
+		

@@ -1,0 +1,7 @@
+DebugSetProcessKillOnExit		1
+DebugActiveProcessStop			1
+GetModuleHandleExA				3
+GetModuleHandleExW				3
+GlobalMemoryStatusEx			1
+OpenThread						3
+OpenConsoleW                    4

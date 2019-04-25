@@ -1,0 +1,7 @@
+压缩、减压字节 1f8b0800000000000000 开头的压缩文件 
+
+
+直接  #include <zipmem.h> 
+即可使用:  
+zipmem      压缩 
+unzipmem    减压 

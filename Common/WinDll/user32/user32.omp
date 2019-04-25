@@ -1,0 +1,4 @@
+SetLayeredWindowAttributes		4
+SystemParametersInfoA			4
+SystemParametersInfoW			4
+AnimateWindow                   3
