@@ -3,8 +3,9 @@
 #include <stdio.h>
 #include <Shlwapi.h>
 #include <Setupapi.h>
-#include "Msports.h"
-#include "Debug.h"
+#include "ComPort/Msports.h"
+#include "Debug/Debug.h"
+#include "defs.h"
 #pragma comment(lib, "Shlwapi")
 #pragma comment(lib, "setupapi")
 
@@ -47,7 +48,7 @@ VOID ChangeManagerShowName(LPTSTR szSrc, LPTSTR szDst)
 			&buffersize); 
 		if (GetLastError() !=  ERROR_INSUFFICIENT_BUFFER)   
 		{   
-            DbgPrintf(TEXT("Enum Com Device Error!"));
+            dbgprint(TEXT("Enum Com Device Error!"));
 			continue;
 		}
 		buffer = (PTSTR)AllocMemory(buffersize+16*sizeof(TCHAR));
@@ -83,7 +84,7 @@ VOID ChangeManagerShowName(LPTSTR szSrc, LPTSTR szDst)
                     0x00F003F);
                 if (hkey == INVALID_HANDLE_VALUE)
                 {
-					DbgPrintf(TEXT("To Open Reg HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Enum\\ACPI\\?????\\?\\Device Parameters Error!"));
+					dbgprint(TEXT("To Open Reg HKEY_LOCAL_MACHINE\\SYSTEM\\ControlSet001\\Enum\\ACPI\\?????\\?\\Device Parameters Error!"));
                 }
 				else
 				{
@@ -143,7 +144,7 @@ BOOL ChgComPort(DWORD dwSrc, DWORD dwDst)
                 NULL);
             if (handle == INVALID_HANDLE_VALUE)
             {
-                DbgPrintf(TEXT("Open Com Port Error, The Port is be Occupied!"));
+                dbgprint(TEXT("Open Com Port Error, The Port is be Occupied!"));
                 break;
             }
             CloseHandle(handle);
@@ -156,7 +157,7 @@ BOOL ChgComPort(DWORD dwSrc, DWORD dwDst)
                 !DefineDosDevice(DDD_RAW_TARGET_PATH, szDstPort, lpTargetPath)   // 加入新定义
                 )
             {
-                DbgPrintf(TEXT("DefineDosDevice error! %s to %s"), szSrcPort, szDstPort);
+                dbgprint(TEXT("DefineDosDevice error! %s to %s"), szSrcPort, szDstPort);
                 break;
             }
             
@@ -180,7 +181,7 @@ BOOL ChgComPort(DWORD dwSrc, DWORD dwDst)
                             dwType,
                             (LPBYTE)szDstPort,
                             _tcslen(szDstPort)*sizeof(TCHAR));
-						DbgPrintf(TEXT("Change SerialComm Show Name!"));
+						dbgprint(TEXT("Change SerialComm Show Name!"));
                         break;
                     }
 					i++;

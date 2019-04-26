@@ -5,7 +5,7 @@ extern "C" {
 #endif // __cplusplus
 #include <windows.h>
 #include <Setupapi.h>
-#pragma comment(lib, "msports")
+#pragma comment(lib, "Msports.lib")
 
 DECLARE_HANDLE(HCOMDB);
 typedef HCOMDB *PHCOMDB;
