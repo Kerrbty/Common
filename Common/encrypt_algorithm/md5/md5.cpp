@@ -52,7 +52,7 @@ void MD5Decode(unsigned int *output, unsigned char *input, unsigned int len);
 //////////////////////////////////////////////////////////////////////////
 
 unsigned char PADDING[] = { 0x80, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-        0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
+0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0 };
 
 void MD5Init(MD5_CTX *context) {
     context->count[0] = 0;
@@ -210,7 +210,7 @@ inline void* calcMD5(void* inBuf, int inlen, void* outBuf, int outlen)
     {
         return NULL;
     }
-    
+
     memset(outBuf, 0, outlen);
     MD5Init(&ctx);
     MD5Update(&ctx, (unsigned char *) inBuf, inlen);
@@ -222,7 +222,7 @@ inline void* calcMD5(void* inBuf, int inlen, void* outBuf, int outlen)
 char* calcMd5toLowerCase(char* szstr, char* outbuf, size_t len)
 {
     unsigned char md5data[16] = {0};
-    
+
     if (calcMD5(szstr, strlen(szstr), md5data, 16))
     {
         for (int j=0; j<16; j++)
@@ -238,7 +238,7 @@ char* calcMd5toLowerCase(char* szstr, char* outbuf, size_t len)
 char* calcMd5toUpperCase(char* szstr, char* outbuf, size_t len)
 {
     unsigned char md5data[16] = {0};
-    
+
     if (calcMD5(szstr, strlen(szstr), md5data, 16))
     {
         for (int j=0; j<16; j++)

@@ -42,7 +42,7 @@ int zip( void )
     return 0;
 }
 
-char * zip_mem_inptr = NULL; /* 输入缓存 */
+unsigned char * zip_mem_inptr = NULL; /* 输入缓存 */
 int zip_mem_insize = 0; /* 输入缓存长度 */
 int zip_mem_inpos = 0; /* 已经使用的位置 */
 int mem_read( char * buf, unsigned size )

@@ -40,7 +40,7 @@ int64 make_int64(unsigned char* buf, int lenth)
 {  
     int i = 0;
     int64 ui=0;  
-    if (lenth > 8)  
+    if (lenth > 8 || lenth < 1)  
     {  
         return (int64)0;  
     }  
@@ -61,8 +61,7 @@ int64 make_int64(unsigned char* buf, int lenth)
         ui = -((ui - 1)^xorval);  
     }  
     return ui;  
-}   
-
+}  
 
 // 跳过 FF25 xxxxxxxx 深入内部hook，或者这里可以添加 E9 xxxxxxxx 深入内部的 hook
 LPVOID GetRealProcAddress(LPVOID FuncAddr)
@@ -76,11 +75,11 @@ LPVOID GetRealProcAddress(LPVOID FuncAddr)
     }
     else if (lpMachineByte[0] == 0xEB) // jmp short 
     {
-        lpFindAddr = lpFindAddr + 2 + make_int64(lpMachineByte+1, 1);
+        lpFindAddr = lpFindAddr + 2 + make_int64(lpFindAddr+1, 1);
     }
     else if (lpMachineByte[0] == 0xE9)  // jmp long 
     {
-        lpFindAddr = lpFindAddr + 5 + make_int64(lpMachineByte+1, 4);
+        lpFindAddr = lpFindAddr + 5 + make_int64(lpFindAddr+1, 4);
     }
     else if (memcmp(lpMachineByte, "\x8B\xFF\x55\x8B\xEC\x5D", 6) == 0)
     {
@@ -95,12 +94,12 @@ LPVOID GetRealProcAddress(LPVOID FuncAddr)
 
 
 // hook拷贝出来有些代码是跳转代码，需要看情况修正 
-void ResetOffset(LPVOID ProcAddress, PBYTE CopyCodeAddr, int len)
+void ResetOffset(LPVOID ProcAddress, PBYTE CopyCodeAddr, DWORD len)
 {
     // "\xE9\x02\x00\x00\x00\xEB\xF9"
     // HotPatch
     // detours 如果有热补丁的情况下，会hook hotpatch 的代码
-    DWORD dwBytes;
+    SIZE_T dwBytes;
     LPBYTE bFunc = (LPBYTE)ProcAddress;
     if (memcmp(CopyCodeAddr, "\xEB\xF9", 2) == 0 )
     {
@@ -137,13 +136,13 @@ void ResetOffset(LPVOID ProcAddress, PBYTE CopyCodeAddr, int len)
         // 修正 jmp short 
         else if (*ProcJmp == 0xEB)
         {
-            signed int reloff = make_int64(ProcJmp+1, 1) + 2; // 获取当前代码地址的偏移地址 
+            signed int reloff = (signed int)make_int64(ProcJmp+1, 1) + 2; // 获取当前代码地址的偏移地址 
             // 跳转地址是否超过了复制的字节数 
-            if ( reloff<0 || reloff>changelen-item_len)
+            if ( reloff<0 || reloff>(int)(changelen-item_len) )
             {
                 // 后面的代码全部后移3字节 
                 changelen += 3;
-                for (int i=changelen-1; i>=item_len+5; i--)
+                for (DWORD i=changelen-1; i>=item_len+5; i--)
                 {
                     ProcJmp[i] = ProcJmp[i-3];
                 }
@@ -159,13 +158,13 @@ void ResetOffset(LPVOID ProcAddress, PBYTE CopyCodeAddr, int len)
         {
             // 原来地址+当前偏移+2+跳转字节 
             // 例如 jz xxx 则要变成 jz 05   jmp 05/xxxxxxxx  jmp xxxxxxxx 
-            signed int reloff = make_int64(ProcJmp+1, 1) + 2; // 获取当前代码地址的偏移地址 
+            signed int reloff = (signed int)make_int64(ProcJmp+1, 1) + 2; // 获取当前代码地址的偏移地址 
             // 跳转地址是否超过了复制的字节数 
-            if ( reloff<0 || reloff>changelen-item_len)
+            if ( reloff<0 || reloff>(int)(changelen-item_len) )
             {
                 // 后面的代码全部后移2*(jmp)长跳5字节 
                 changelen += 10;
-                for (int i=changelen-1; i>=item_len+10; i--)
+                for (DWORD i=changelen-1; i>=item_len+10; i--)
                 {
                     ProcJmp[i] = ProcJmp[i-10];
                 }
@@ -210,10 +209,11 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
         return FALSE;
     }
 
-    ProcAddress = GetRealProcAddress(ProcAddress);
+    // 跳过一些非必要代码，深入内部，也可以hook已hook函数，直到核心 
+    LPVOID RealProcAddress = GetRealProcAddress(ProcAddress);
     for (int i=0; i<NowFunNum; i++)
     {
-        if( Function[i].HookedFunAddr == (LPVOID)ProcAddress )
+        if( Function[i].HookedFunAddr == (LPVOID)RealProcAddress )  // 对于jmp 好像没什么用，因为会继续深入到跳转目标，尴尬 
         {
             return TRUE;
         }
@@ -224,23 +224,33 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
 	BYTE retbuf[] = "\x68\x00\x00\x00\x00\xC3"; // push address , retn
 
 	memset(TMP, 0x90, 20);
-	////////////////////////////////////////////////////////////
-	// 偏移地址 = 我们函数的地址 - 原API函数的地址 - 5（我们这条指令的长度）
-	DWORD NewAddress = (DWORD)MyProcAddr - (DWORD)ProcAddress - 5; 
+
+#ifdef _USE_JMP_
+    const int iHookNeedLen = 5;
+    TMP[0]=(BYTE)0xE9;
+
+    ////////////////////////////////////////////////////////////
+    // 偏移地址 = 我们函数的地址 - 原API函数的地址 - 5（我们这条指令的长度）
+    DWORD NewAddress = (DWORD)MyProcAddr - (DWORD)RealProcAddress - 5; 
+    *(DWORD*)(TMP+1) = NewAddress;
+#else
+    // 对应会重载dll的壳来说，不能用jmp (便宜地址会变) 
+    const int iHookNeedLen = 6;
+    TMP[0]= (BYTE)0x68;
+    *(DWORD*)(TMP+1) = (DWORD)MyProcAddr;
+    TMP[5] = (BYTE)0xC3 ;
+#endif
 	
-	TMP[0]=(BYTE)0xE9;
-	*(DWORD*)(TMP+1) = NewAddress;
-
 	DWORD len = 0;
-	while(len < 5)
+	while(len < iHookNeedLen)
 	{
-		DWORD i = LDE((unsigned char *)ProcAddress, 0);
+		DWORD i = LDE((unsigned char *)RealProcAddress, 0);
 		len += i;
-		ProcAddress = (PVOID)((DWORD)ProcAddress + i);
+		RealProcAddress = (PVOID)((DWORD)RealProcAddress + i);
 	}
-	ProcAddress = (PVOID)((DWORD)ProcAddress - len);
+	RealProcAddress = (PVOID)((DWORD)RealProcAddress - len);
 
-	*(DWORD*)(retbuf+1) = (DWORD)ProcAddress + len;
+	*(DWORD*)(retbuf+1) = (DWORD)RealProcAddress + len;
 
 	// 真正使用的大小 len + sizeof(retbuf) - 1
 	BYTE* ProcJmp = (BYTE*)AllocMemory(len + ALLOC_JMP_Size + sizeof(retbuf)); 
@@ -254,7 +264,7 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
 	// 被替换的首部指令
 	if ( VirtualProtect(ProcJmp, len+ALLOC_JMP_Size+sizeof(retbuf), PAGE_EXECUTE_READWRITE, &OldProtect) )
 	{
-		memcpy(ProcJmp, ProcAddress, len);
+		memcpy(ProcJmp, RealProcAddress, len);
 		memcpy(ProcJmp+ALLOC_JMP_Size+len, retbuf, sizeof(retbuf));
 //		VirtualProtect(ProcJmp, len+sizeof(retbuf), OldProtect, &OldProtect);
 	}
@@ -265,12 +275,12 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
 
 	// 保存原函数——自己处理函数
 	EnterCriticalSection(&CriticalSection);
-    Function[NowFunNum].HookedFunAddr = (LPBYTE)ProcAddress;
+    Function[NowFunNum].HookedFunAddr = (LPBYTE)RealProcAddress;
 	Function[NowFunNum].MyFunAddr = (LPBYTE)MyProcAddr;
 	Function[NowFunNum].NewMalloc = (LPBYTE)ProcJmp;
 	Function[NowFunNum].srclen = len;
 	Function[NowFunNum].srcByte = (LPBYTE)AllocMemory(len);
-	memcpy(Function[NowFunNum].srcByte, ProcAddress, len);
+	memcpy(Function[NowFunNum].srcByte, RealProcAddress, len);
 	NowFunNum++ ;
 	LeaveCriticalSection(&CriticalSection);
 
@@ -280,17 +290,16 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
     }
 
 	// 修改一些偏移
-	ResetOffset(ProcAddress, ProcJmp, len);
+	ResetOffset(RealProcAddress, ProcJmp, len);
 
 	// Inline Hook
-	if( VirtualProtect(ProcAddress, len, PAGE_EXECUTE_READWRITE, &OldProtect) )
+	if( VirtualProtect(RealProcAddress, len, PAGE_EXECUTE_READWRITE, &OldProtect) )
 	{
-		memcpy(ProcAddress, TMP, len); // 写入jmp指令
-		VirtualProtect(ProcAddress, len, OldProtect, &OldProtect);
+		memcpy(RealProcAddress, TMP, len); // 写入jmp指令
+		VirtualProtect(RealProcAddress, len, OldProtect, &OldProtect);
 	}
 	
 	////////////////////////////////////////////////////////////
-	
 	return TRUE;
 }
 
@@ -316,6 +325,7 @@ BOOL HookProcByName(LPCTSTR DllName, LPCSTR ProcName, PVOID MyProcAddr)
 	return HookProcByAddress(ProcAddress, MyProcAddr);
 }
 
+// 注意，此函数可以重复hook 
 BOOL HookProc(LPVOID addr, LPVOID MyProcAddr)
 {
     LPVOID ProcAddress = *(PBYTE*)addr;
@@ -344,13 +354,19 @@ BOOL UnHookProc(LPVOID addr, LPVOID MyProcAddr)
         // 回调原函数比对 
         if (Function[i].NewMalloc == ProcAddress)
         {
-            *(LPBYTE*)addr = Function[i].HookedFunAddr;
             if ( VirtualProtect(Function[i].HookedFunAddr, Function[i].srclen, PAGE_EXECUTE_READWRITE, &OldProtect) )
             {
                 memcpy(Function[i].HookedFunAddr, Function[i].srcByte, Function[i].srclen);
                 VirtualProtect(Function[i].HookedFunAddr, Function[i].srclen, OldProtect, &OldProtect);
                 FreeMemory(Function[i].srcByte);
-                FreeMemory(Function[i].NewMalloc);
+                *(LPVOID*)addr = Function[i].HookedFunAddr;  // 恢复函数指针,以防止后面清除内存 Function[i].NewMalloc 导致bug 
+
+//                 Sleep(0);
+//                 // 删除jmp stub内存, 以防多线程调用，还是先保留吧，内存泄漏 
+//                 FreeMemory(Function[i].NewMalloc);
+//                 Function[i].NewMalloc = NULL; 
+
+                // 后面的hook数据往前移 
                 NowFunNum--;
                 while (i<NowFunNum)
                 {
@@ -358,6 +374,8 @@ BOOL UnHookProc(LPVOID addr, LPVOID MyProcAddr)
                     i++;
                 }
             }
+
+
         }
     }
     LeaveCriticalSection(&CriticalSection);

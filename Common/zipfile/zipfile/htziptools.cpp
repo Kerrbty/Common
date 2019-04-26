@@ -1,4 +1,3 @@
-#define _CRT_SECURE_NO_WARNINGS
 #include "htziptools.h"
 #include "List.h"
 #include "defs.h"
@@ -6,12 +5,23 @@
 #include <windows.h>
 #pragma comment(lib, "shlwapi")
 
+
 typedef struct _HT_ZIP_FILEINF
 {
     LIST_ENTRY next;
     char* filePath; // 文件完整路径 
     char* fileName; // 文件相对路径 
 }HT_ZIP_FILEINF, *PHT_ZIP_FILEINF;
+
+
+bool file_exists(const char *filename)
+{
+#ifdef _MSC_VER
+    return PathFileExistsA(filename);
+#else  // gcc 
+    return (access(filename, 0) == 0);
+#endif
+}
 
 // 创建目录 
 bool MakeAllDir(const char* path)
@@ -25,9 +35,14 @@ bool MakeAllDir(const char* path)
     {
         if (path[i] == '\\')
         {
-            if ( !PathFileExistsA(makefolder) )
+            if ( !file_exists(makefolder) )
             {
+#ifdef _MSC_VER
                 CreateDirectoryA(makefolder, NULL);
+#else
+                mkdir(makefolder);
+#endif
+                
 
                 // 没用，因为里面新建文件以后，时间又被修改了
 //                 // 如果存在需要设置文件夹时间的 
@@ -54,7 +69,7 @@ bool MakeAllDir(const char* path)
     }
 
     makefolder[ilastsp] = '\0';
-    bool success = (PathFileExistsA(makefolder) == TRUE);
+    bool success = (file_exists(makefolder) == TRUE);
     delete[] makefolder;
 
     return success;
@@ -84,7 +99,7 @@ HT_ZIP_FILEINF* getFiles(const char* directory, HT_ZIP_FILEINF* infos)
     {
         _InitializeListHead(&infos->next);
     }
-    if ( !PathFileExistsA(directory) )
+    if ( !file_exists(directory) )
     {
         return infos;
     }
@@ -93,7 +108,14 @@ HT_ZIP_FILEINF* getFiles(const char* directory, HT_ZIP_FILEINF* infos)
     char* curdir = (char*)AllocMemory(curlen+MAX_PATH);
     strcpy(curdir, directory);
     ReplaceChar(curdir, '/', '\\');
+#ifdef _MSC_VER
     if ( !PathIsDirectory(curdir) )
+#else
+    struct stat stbuf = {0};
+    int nRet = stat(curdir, &stbuf);  
+    if ( !(stbuf.st_mode&_S_IFDIR) )
+#endif
+    
     {
         // 只是一个文件 
         PHT_ZIP_FILEINF newfile = (PHT_ZIP_FILEINF)AllocMemory(sizeof(HT_ZIP_FILEINF));
@@ -120,8 +142,8 @@ HT_ZIP_FILEINF* getFiles(const char* directory, HT_ZIP_FILEINF* infos)
         do 
         {
             if (
-                strcmp(FindFileData.cFileName, ".") == 0 ||
-                strcmp(FindFileData.cFileName, "..") == 0
+                stricmp(FindFileData.cFileName, ".") == 0 ||
+                stricmp(FindFileData.cFileName, "..") == 0
                 )
             {
                 continue;
@@ -163,7 +185,7 @@ long getFileLastAccessTime(const char* filePath)
 	long result = 0;
     GetSystemTime(&systemtime);
     SystemTimeToFileTime(&systemtime, &lpLastAccessTime);
-    if ( PathFileExistsA(filePath) )
+    if ( file_exists(filePath) )
     {
         if (PathIsDirectory(filePath))
         {
@@ -235,7 +257,7 @@ int compress(zipFile& file, char* showPath, char* path)
 int ht_zipCompress(char* directory, char* zipfile, int replaceFlag)
 {
     int ret = HT_ZIP_RETURN_FLAG_OK;	
-    if ( !PathFileExistsA(directory) )
+    if ( !file_exists(directory) )
     {
         return HT_ZIP_RETURN_FLAG_ERROR;
     }
@@ -252,7 +274,7 @@ int ht_zipCompress(char* directory, char* zipfile, int replaceFlag)
         getFiles(directory, &fileinfo); // 获取要压缩的文件列表
 
         int openMode = APPEND_STATUS_CREATE;
-        if (PathFileExistsA(zipfile))
+        if (file_exists(zipfile))
         {
             if (replaceFlag = HT_ZIP_FILE_REPLACE)
             {
@@ -334,11 +356,7 @@ int ht_zipExtract(char* zipfile, char* outDirectory, int replaceFlag)
     }
 	
     // zip文件是否存在 
-#ifdef _MSC_VER // vs 
-    if ( !PathFileExistsA(zipfile) )
-#else  // gcc 
-    if ( access(zipfile, 0) != 0 )
-#endif
+    if ( !file_exists(zipfile) )
     {
 		return HT_ZIP_RETURN_FLAG_FILE_NOT_FOUND;
 	}
@@ -354,7 +372,7 @@ int ht_zipExtract(char* zipfile, char* outDirectory, int replaceFlag)
     do 
     {
         // 判断输出目录是否存在 
-        if ( !PathFileExistsA(OutDirFileName) )
+        if ( !file_exists(OutDirFileName) )
         {
             if( !MakeAllDir(ReplaceChar(OutDirFileName, '/', '\\')) )
             {
@@ -383,7 +401,7 @@ int ht_zipExtract(char* zipfile, char* outDirectory, int replaceFlag)
                 if (unzGetGlobalInfo64(unzfile, &unzInfo) == UNZ_OK)
                 {				
                     // 分步解压缩文件
-                    for(ZPOS64_T i = 0, j = unzInfo.number_entry; i < j && ret == HT_ZIP_RETURN_FLAG_OK; i ++)
+                    for(int i = 0, j = unzInfo.number_entry; i < j && ret == HT_ZIP_RETURN_FLAG_OK; i ++)
                     {
                         unz_file_info64 unzfileinfo;
                         unzGetCurrentFileInfo64(unzfile, &unzfileinfo, OutDirFileName+ilen, MAX_PATH*2-ilen, NULL, 0, NULL, 0); // 获取文件
@@ -453,7 +471,7 @@ int ht_zipExtract(char* zipfile, char* outDirectory, int replaceFlag)
         __except(EXCEPTION_EXECUTE_HANDLER)
         {
             ret = HT_ZIP_RETURN_FLAG_ERROR;
-    	}
+    	 }
         FreeMemory(in);
     } while (0);
 
@@ -472,7 +490,7 @@ unsigned __int64 ht_zipFindExtractToMemory(char* zipfile, char* findfilename, un
     }
 
     // zip文件是否存在 
-    if ( !PathFileExistsA(zipfile) )
+    if ( !file_exists(zipfile) )
     {
         return HT_ZIP_RETURN_FLAG_FILE_NOT_FOUND;
     }
@@ -488,12 +506,12 @@ unsigned __int64 ht_zipFindExtractToMemory(char* zipfile, char* findfilename, un
             if (unzGetGlobalInfo64(unzfile, &unzInfo) == UNZ_OK)
             {				
                 // 分步解压缩文件
-                for(ZPOS64_T i = 0, j = unzInfo.number_entry; i < j && ret == HT_ZIP_RETURN_FLAG_OK; i ++)
+                for(int i = 0, j = unzInfo.number_entry; i < j && ret == HT_ZIP_RETURN_FLAG_OK; i ++)
                 {
                     unz_file_info64 unzfileinfo;
                     unzGetCurrentFileInfo64(unzfile, &unzfileinfo, filename, MAX_PATH*2, NULL, 0, NULL, 0); // 获取文件
 
-                    if (StrStrIA(filename, findfilename) == 0)
+                    if (stricmp(filename, findfilename) == 0)
                     {
                         filesize = unzfileinfo.uncompressed_size;
                         if ( buf != NULL && buflen != NULL && *buflen != 0 )

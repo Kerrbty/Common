@@ -1,9 +1,8 @@
 #include "../defs.h"
+#include "Config.h"
 #include "AnalyzeURL.h"
-#include <winhttp.h>
 #include <stdio.h>
 #include "../StringFormat/StringForm.h"
-
 
 // WORD m_port;
 // LPWSTR m_server_name; 
@@ -112,6 +111,14 @@ VOID CURL::AnalyzeUrl(LPWSTR szurl)
 
     m_server_name = (LPWSTR)AllocMemory((dwHostNameLen+4)*sizeof(WCHAR));
     memcpy(m_server_name, hostname, dwHostNameLen*sizeof(WCHAR));
+
+    // URL with port ? 
+    LPWSTR objport = wcschr(m_server_name, L':');
+    if (objport != NULL)
+    {
+        m_port = _wtol(objport+1);
+        *objport = L'\0';
+    }
 
     if (objname != NULL)
     {

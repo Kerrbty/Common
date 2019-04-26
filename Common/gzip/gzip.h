@@ -181,7 +181,7 @@ extern int level;          /* compression level */
 #define WARN(msg) {if (!quiet) fprintf msg ; \
            if (exit_code == OK) exit_code = WARNING;}
 
-extern char * zip_mem_inptr; /* 输入缓存 */
+extern unsigned char * zip_mem_inptr; /* 输入缓存 */
 extern int zip_mem_insize; /* 输入缓存长度 */
 extern int zip_mem_inpos; /* 已经使用的位置 */
 

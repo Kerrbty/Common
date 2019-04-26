@@ -4,9 +4,9 @@
 #include <excpt.h>
 #ifdef __cplusplus
 #define EXTERN_C   extern "C"
-#else
+#else // __cplusplus 
 #define EXTERN_C
-#endif
+#endif // __cplusplus 
 
 #define ODIN_SETTING  _T("Brush.ini")
 #define MTK_SETTING   _T("setting.ini")

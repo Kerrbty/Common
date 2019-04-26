@@ -1,6 +1,7 @@
 #ifndef _MY_HOOK_API_
 #define _MY_HOOK_API_
 #define MAX_HOOK_NUM   256
+#define _USE_JMP_ 
 
 #include <stdio.h>
 #include <stdlib.h>

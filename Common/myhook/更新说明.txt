@@ -1,8 +1,15 @@
-2018.8.8
-1.���� HookProc/UnHookProc ���̣�ʹ��������DetourAttach/DetourDetach������detours�Ĵ�����ֲ 
-2.����Debug�汾�µ��뺯����ַΪ FF 25 ����hook�Ժ�����������
+﻿2018.8.8
+1.添加 HookProc/UnHookProc 例程，使用类似于DetourAttach/DetourDetach，方便detours的代码移植 
+2.处理Debug版本下导入函数地址为 FF 25 导致hook以后程序崩溃问题
 
 2018.10.9
-����win7�Ժ�Kernel32.dll���һ���տǣ���ֱ��ת����ת��KernelBase.dll��������ʵ��Hook��ַΪKernelBase�ڲ�
-1. ������ȡ��ʵ��ַ���� GetRealProcAddress ����ͷ��ֱ����ת��FF 25/E9/EB�����߲���ebp�ֻ�ԭ���벿��ֱ������
-2. UnHookProc �����У�Hookʱ�����ɵ�ת�Ӻ����ڴ�ɾ��������Ӧ�üӸ���ʱ������ĳ���߳���������δ����У�
+由于win7以后Kernel32.dll变成一个空壳，会直接转接跳转到KernelBase.dll，所以真实的Hook地址为KernelBase内部
+1. 独立获取真实地址函数 GetRealProcAddress 函数头部直接跳转（FF 25/E9/EB）或者操作ebp又还原代码部分直接跳过
+2. UnHookProc 例程中，Hook时候生成的转接函数内存删除（或许应该加个延时，以免某个线程正处在这段代码中）
+
+
+2018.11.29
+某些壳程序在解壳过程会重载DLL，如果用jmp hook可能会出问题
+1. 增加使用push xxxxxxxx， retn 方式hook头部，开关在Hook.h 中，删除 #define _USE_JMP_  即可
+2. UnHookProc 例程恢复 pOldFunc(addr) 指针
+3. Hook中不直接修改ProcAddress，以后判断重复hook，可新增一个Function[i].RawHookedFunAddr 记录判断 

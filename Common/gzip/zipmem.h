@@ -34,7 +34,7 @@ extern "C" {
 	返回值:
 	    压缩后的内存长度
 */
-int zipmem( char * mem_inptr, int mem_insize, char * mem_outptr );
+int zipmem( unsigned char * mem_inptr, int mem_insize, unsigned char * mem_outptr );
 
 /*
 	函数功能: 解压缩, 解压缩后的数据存放在mem_outptr所指向的空间
@@ -45,7 +45,7 @@ int zipmem( char * mem_inptr, int mem_insize, char * mem_outptr );
 	返回值:
 	    解压缩的内存长度
 */
-int unzipmem( char * mem_inptr, int mem_insize, char * mem_outptr );
+int unzipmem( unsigned char * mem_inptr, int mem_insize, unsigned char * mem_outptr );
 
 #ifdef __cplusplus
 };

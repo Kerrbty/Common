@@ -62,7 +62,7 @@ int (* work ) OF(()) = zip; /* function to call */
 /* ========================================================================
  * Compress
  */
-int zipmem( char * mem_inptr, int mem_insize, char * mem_outptr )
+int zipmem( unsigned char * mem_inptr, int mem_insize, unsigned char * mem_outptr )
 {
     time_stamp = 0;
     ALLOC( uch, inbuf,  INBUFSIZ + INBUF_EXTRA );
@@ -88,7 +88,7 @@ int zipmem( char * mem_inptr, int mem_insize, char * mem_outptr )
 /* ========================================================================
  * deCompress
  */
-int unzipmem( char * mem_inptr, int mem_insize, char * mem_outptr )
+int unzipmem( unsigned char * mem_inptr, int mem_insize, unsigned char * mem_outptr )
 {
     time_stamp = 0;
     ALLOC( uch, inbuf,  INBUFSIZ + INBUF_EXTRA );

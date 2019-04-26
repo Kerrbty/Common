@@ -1,4 +1,5 @@
 #include "Http.h"
+#include "Config.h"
 #include "AnalyzeURL.h"
 #include "../StringFormat/StringForm.h"
 #include <stdlib.h>
@@ -128,6 +129,32 @@ BOOL AddRequestHeaders(HINTERNET hRequest, LPCWSTR header)
 }
 
 
+// 不检测远程服务器的ssl帧数是否过期 
+BOOL SetRequestIgnoreCert(HINTERNET hRequest)
+{
+    DWORD dwFlags;
+    DWORD dwBuffLen = sizeof(dwFlags);
+
+#ifdef USE_WINHTTP        
+    WinHttpQueryOption (hRequest, WINHTTP_OPTION_SECURITY_FLAGS, (LPVOID)&dwFlags, &dwBuffLen);
+    dwFlags |= SECURITY_FLAG_IGNORE_UNKNOWN_CA;
+    dwFlags |= SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+    dwFlags |= SECURITY_FLAG_IGNORE_CERT_CN_INVALID;
+    // dwFlags |= SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
+
+    return WinHttpSetOption (hRequest, WINHTTP_OPTION_SECURITY_FLAGS, &dwFlags, sizeof (dwFlags) );
+#else
+    InternetQueryOption(hRequest, INTERNET_OPTION_SECURITY_FLAGS, (LPVOID)&dwFlags, &dwBuffLen);
+    dwFlags |= SECURITY_FLAG_IGNORE_UNKNOWN_CA;
+    dwFlags |= SECURITY_FLAG_IGNORE_CERT_DATE_INVALID;
+    dwFlags |= SECURITY_FLAG_IGNORE_CERT_CN_INVALID;
+    // dwFlags |= SECURITY_FLAG_IGNORE_CERT_WRONG_USAGE;
+
+    return InternetSetOption (hRequest, INTERNET_OPTION_SECURITY_FLAGS, &dwFlags, sizeof(dwFlags));
+#endif
+}
+
+
 BOOL SendRequest(HINTERNET hRequest, const void* body, DWORD size)
 {
 #ifdef USE_WINHTTP
@@ -231,6 +258,7 @@ void CHttp::Initialize()
     m_PostData = NULL;
     m_dwPostSize = 0;
 
+    m_Ignore_Cert = FALSE;
     m_cookies = NULL;
     m_Referer = NULL;
     m_Accept = FALSE;
@@ -420,6 +448,14 @@ SetFuncBody(SetUserAgent, m_UserAgent);  // 使用的浏览器代理类型 : Mozilla/5.0 (
 SetFuncBody(SetContentType, m_ContentType);
 SetFuncBody(SetAcceptEncoding, m_AcceptEncoding); // 是否压缩传输 : gzip, deflate 
 SetFuncBody(SetAcceptLanguage, m_AcceptLanguage);
+
+
+BOOL CHttp::SetIgnoreCert(BOOL bIgnore)
+{
+    BOOL bset = m_Ignore_Cert;
+    m_Ignore_Cert = bIgnore;
+    return bset;
+}
 
 
 // 提交请求的方式 GET/POST， 默认为 GET 
@@ -669,6 +705,12 @@ BOOL CHttp::GetHttpRequestHeader()
         AddHeaderReqStr(L"Cookie", m_cookies);
     }
 
+    // 设置忽略CERT证书标志 并且浏览的网页为HTTPS网站 
+    if (m_Ignore_Cert && m_url.GetScheme() == INTERNET_SCHEME_HTTPS)
+    {
+        SetRequestIgnoreCert(m_hRequest);
+    }
+
     // 发送请求 
     // Send get/post data. 
     if (SendRequest(m_hRequest, m_PostData, m_dwPostSize))
@@ -756,6 +798,22 @@ const WCHAR* CHttp::GetDataLenthW()     // 返回正文数据长度(出去头部)
         return m_tmp_header;
     }
     return NULL;
+}
+
+DWORD CHttp::GetData(LPBYTE lpBuf, DWORD dwLenth)
+{
+    DWORD dwGetLen = 0;
+    if (!m_IsRequest)
+    {
+        GetHttpRequestHeader();
+    }
+
+	DWORD ReadLenth = 0;
+    while (dwLenth>dwGetLen && ReadData(m_hRequest, lpBuf+dwGetLen, dwLenth-dwGetLen, &ReadLenth) == TRUE && ReadLenth > 0 )
+    {
+        dwGetLen += ReadLenth;
+    }
+    return dwGetLen;
 }
 
 const WCHAR* CHttp::GetSetCookieW()     // 返回新的 Cookie WINHTTP_QUERY_SET_COOKIE/HTTP_QUERY_SET_COOKIE

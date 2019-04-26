@@ -1,20 +1,9 @@
 #ifndef _CHTTP_ZXLY_2019_HEADER_HH_H
 #define _CHTTP_ZXLY_2019_HEADER_HH_H
-#include "../defs.h"
+#include <Windows.h>
 #include "AnalyzeURL.h"
 
-#define USE_WINHTTP
-
-#ifdef USE_WINHTTP 
-// xp
-#include <winhttp.h>
-#pragma comment(lib, "winhttp.lib")
-#else // USE_WINHTTP 
-// xp sp3
-#include <WinInet.h>
-#pragma comment(lib, "wininet.lib")
-#endif // USE_WINHTTP 
-
+typedef void *HINTERNET;
 
 // 返回传送的dwSize大小，如果不等则退出接收环节 
 typedef unsigned long (WINAPI* PGetData)(unsigned char* lpBuf, unsigned long dwSize, void* userdata);
@@ -39,9 +28,9 @@ public:
     BOOL AddCookieA(LPCSTR szCookie);
     BOOL AddCookieW(LPCWSTR szCookie);
 
-    void CleanCookie();
+    void CleanCookie();  // 清除之前设置的Cookies 
 
-    // 引用网站，跳转之前的网站 https://bbs.xxxxxx.com/ 
+    // 引用页，跳转之前的网站 Referer：https://bbs.xxxxxx.com/ 
     BOOL SetRefererA(LPCSTR szRefererName);
     BOOL SetRefererW(LPCWSTR szRefererName);
 
@@ -52,10 +41,11 @@ public:
     BOOL SetAcceptA(LPCSTR szAcceptFile);
     BOOL SetAcceptW(LPCWSTR szAcceptFile);
 
+    // 接收语言 Accept-Language: fr-CH, fr;q=0.9, en;q=0.8, de;q=0.7, *;q=0.5 
     BOOL SetAcceptLanguageA(LPCSTR szLanguage);
     BOOL SetAcceptLanguageW(LPCWSTR szLanguage);
 
-    // 是否压缩传输 : gzip, deflate 
+    // 是否压缩传输 : Accept-Encoding: deflate, gzip;q=1.0, *;q=0.5 
     BOOL SetAcceptEncodingA(LPCSTR szEncoding);
     BOOL SetAcceptEncodingW(LPCWSTR szEncoding);
 
@@ -63,12 +53,15 @@ public:
     BOOL SetUserAgentA(LPCSTR szAgent);
     BOOL SetUserAgentW(LPCWSTR szAgent);
 
+    // Range: bytes=5001-10000
     BOOL SetRangeA(LPCSTR szRange);
     BOOL SetRangeW(LPCWSTR szRange);
 
     // 用于分段下载时候标记文件 
     BOOL SetETagA(LPCSTR szTag);
     BOOL SetETagW(LPCWSTR szTag);
+
+    BOOL SetIgnoreCert(BOOL bIgnore);  // 忽略HTTPS证书合法性 TRUE 表示忽略,返回原来设置 
 
     // 提交请求的方式 GET/POST， 默认为 GET 
     void SetPost(BOOL bPost = TRUE); // True 为 Post， False 为 Get 
@@ -108,12 +101,13 @@ protected:
 public:
     const WCHAR* GetReturnCodeIdW();  // "200" "404" "500"
     const WCHAR* GetReturnTextIdW();  // "OK"
-    const WCHAR* GetDataLenthW();     // 返回正文数据长度(出去头部) 
+    const WCHAR* GetDataLenthW();     // 返回正文数据长度(除去头部) 
     const WCHAR* GetSetCookieW();     // 返回新的 Cookie WINHTTP_QUERY_SET_COOKIE/HTTP_QUERY_SET_COOKIE
 
     const char* GetReturnCodeIdA();  // "200" "404" "500"
     const char* GetReturnTextIdA();  // "OK"
     const char* GetDataLenthA();     // 返回正文数据长度(出去头部) 
+    DWORD       GetData(LPBYTE lpBuf, DWORD dwLenth);  // 获取http服务器返回正文  
     const char* GetSetCookieA();  
 
     // WINHTTP_QUERY_ETAG   ->  ETag: "lr0ZzoawyyhskvuleG6PNUPXjzKs" 
@@ -124,11 +118,12 @@ private:
     CURL   m_url;
     BOOL   m_IsPost;   // 是POST方式发送数据 
     BOOL   m_SetXmlHttpRequest;
-    BOOL   m_IsRequest; // 是否已经请求过数据 ? 
+    BOOL   m_IsRequest; // 是否已经请求过数据 ?  
 
     LPBYTE m_PostData;
     DWORD  m_dwPostSize;
 
+    BOOL   m_Ignore_Cert;
     LPWSTR m_AcceptLanguage;
     LPWSTR m_ContentType;
     LPWSTR m_cookies;

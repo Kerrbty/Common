@@ -5,7 +5,7 @@
 #define _ZXLY_DEBUG_HEADER_INFO_H_
 #ifdef __cplusplus
 extern "C" {
-#endif
+#endif // __cplusplus 
 #include <stdio.h>
 
 #ifdef _DEBUG 
@@ -43,5 +43,5 @@ int _dbgfprintW(FILE* stream, const wchar_t* lpszFormant, ...);
 
 #ifdef __cplusplus
 };
-#endif
-#endif  // _ZXLY_DEBUG_HEADER_INFO_H_
+#endif // __cplusplus 
+#endif  // _ZXLY_DEBUG_HEADER_INFO_H_ 
