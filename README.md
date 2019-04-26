@@ -11,15 +11,15 @@ History
 Description
 ---
 
-myhook			自己实现的一个x86 inline hook库 
+* myhook     自己实现的一个x86 inline hook库 
 
-Http			利用winhttp库实现的http C++通信库 
+* Http			利用winhttp库实现的http C++通信库 
 
-HttpDownload	利用Http库实现的多线程http下载库 
+* HttpDownload	利用Http库实现的多线程http下载库 
 
-COneLine		一行行读取文本类 
+* COneLine		一行行读取文本类 
 
-ComPort			Windows下修改串口信息，主要是用来修改串口号 
+* ComPort			Windows下修改串口信息，主要是用来修改串口号 
 
-Log				直接调用ntdll读写文件的日志库（主要用于hook I/O函数的时候写日志） 
+* Log				直接调用ntdll读写文件的日志库（主要用于hook I/O函数的时候写日志） 
 
