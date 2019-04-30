@@ -1,7 +1,7 @@
 #include "Http.h"
 #include "Config.h"
 #include "AnalyzeURL.h"
-#include "../StringFormat/StringForm.h"
+#include "../StringFormat/StringFormat.h"
 #include <stdlib.h>
 #include <stdio.h>
 
@@ -827,7 +827,7 @@ const WCHAR* CHttp::GetSetCookieW()     // ·µ»ØÐÂµÄ Cookie WINHTTP_QUERY_SET_COO
         FreeMemory(m_tmp_header);
     }
 
-    DWORD cbSize = MAX_PATH;
+    DWORD cbSize = MAX_PATH*2;
     m_tmp_header = (LPWSTR)AllocMemory(cbSize*sizeof(WCHAR));
 #ifdef USE_WINHTTP
     if ( QueryInfo(m_hRequest, WINHTTP_QUERY_SET_COOKIE, m_tmp_header, &cbSize) )

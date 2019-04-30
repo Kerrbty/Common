@@ -219,11 +219,11 @@ inline void* calcMD5(void* inBuf, int inlen, void* outBuf, int outlen)
     return outBuf;
 }
 
-char* calcMd5toLowerCase(char* szstr, char* outbuf, size_t len)
+char* calcMd5toLowerCase(char* szstr, unsigned long inlen, char* outbuf, size_t outlen)
 {
     unsigned char md5data[16] = {0};
 
-    if (calcMD5(szstr, strlen(szstr), md5data, 16))
+    if (calcMD5(szstr, inlen, md5data, 16))
     {
         for (int j=0; j<16; j++)
         {
@@ -235,11 +235,11 @@ char* calcMd5toLowerCase(char* szstr, char* outbuf, size_t len)
 }
 
 
-char* calcMd5toUpperCase(char* szstr, char* outbuf, size_t len)
+char* calcMd5toUpperCase(char* szstr, unsigned long inlen, char* outbuf, size_t outlen)
 {
     unsigned char md5data[16] = {0};
 
-    if (calcMD5(szstr, strlen(szstr), md5data, 16))
+    if (calcMD5(szstr, inlen, md5data, 16))
     {
         for (int j=0; j<16; j++)
         {
@@ -251,17 +251,17 @@ char* calcMd5toUpperCase(char* szstr, char* outbuf, size_t len)
 }
 
 
-char* FiveMd5Calc(char* szstr, char* outbuf, size_t len)
+char* FiveMd5Calc(char* szstr, unsigned long inlen, char* outbuf, size_t outlen)
 {
-    if (len < 33)
+    if (outlen < 33)
     {
         return NULL;
     }
 
-    calcMd5toUpperCase(szstr, outbuf, len);
+    calcMd5toUpperCase(szstr, inlen, outbuf, outlen);
     for (int i=0; i<4; i++)
     {
-        calcMd5toUpperCase(outbuf, outbuf, len);
+        calcMd5toUpperCase(outbuf, 32, outbuf, outlen);
     }
     return outbuf;
 }

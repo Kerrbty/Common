@@ -130,7 +130,7 @@ char* CReadLine::getLine(LPSTR pbuf, PDWORD ullen)
         *ullen = dwlen;
     }
 
-    if (dwlen == 0)
+    if (dwlen == 0 && m_now_offset >= m_size_buf)
     {
         return NULL;
     }

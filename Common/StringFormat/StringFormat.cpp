@@ -1,4 +1,4 @@
-#include "StringForm.h"
+#include "StringFormat.h"
 
 // UTF8 ×ª Õ­×Ö½Ú
 PSTR UTF8ToANSI( INOUT PSTR str , IN size_t size)

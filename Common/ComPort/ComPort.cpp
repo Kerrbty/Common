@@ -3,7 +3,7 @@
 #include <stdio.h>
 #include <Shlwapi.h>
 #include <Setupapi.h>
-#include "ComPort/Msports.h"
+#include "ComPort/msports.h"
 #include "Debug/Debug.h"
 #include "defs.h"
 #pragma comment(lib, "Shlwapi")
