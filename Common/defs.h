@@ -111,6 +111,7 @@ static inline VOID FreeMemory(LPVOID _addr)
                 break;
             }
         }
+        addr = NULL;
     }
 }
 

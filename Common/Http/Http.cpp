@@ -393,6 +393,7 @@ void CHttp::CleanCookie()
     if (m_cookies != NULL)
     {
         FreeMemory(m_cookies);
+        m_cookies = NULL;
     }
 }
 
@@ -556,16 +557,26 @@ void CHttp::CleanAllHeaderData()
     m_IsRequest = FALSE;
     m_dwPostSize = 0;
     FreeMemory(m_PostData);
+    m_PostData = NULL;
     FreeMemory(m_Referer);
+    m_Referer = NULL;
     FreeMemory(m_Accept);
+    m_Accept = NULL;
     FreeMemory(m_AcceptEncoding);
+    m_AcceptEncoding = NULL;
     FreeMemory(m_UserAgent);
+    m_UserAgent = NULL;
     FreeMemory(m_ContentType);
+    m_ContentType = NULL;
     FreeMemory(m_AcceptLanguage);
+    m_AcceptLanguage = NULL;
     FreeMemory(m_Range);
+    m_Range = NULL;
 
     FreeMemory(m_tmp_header);
+    m_tmp_header = NULL;
     FreeMemory(m_tmp_string);
+    m_tmp_string = NULL;
     CloseRequest();
 }
 
@@ -576,8 +587,11 @@ void CHttp::Reset()
 
     // 下次请求还可以继续用的数据，如果同一个网站 
     FreeMemory(m_cookies);
+    m_cookies = NULL;
     FreeMemory(m_szurl);
+    m_szurl = NULL;
     FreeMemory(m_Tag);
+    m_Tag = NULL;
 }
 
 
@@ -734,6 +748,7 @@ const WCHAR* CHttp::GetReturnCodeIdW()  // "200" "404" "500"
     if (m_tmp_header)
     {
         FreeMemory(m_tmp_header);
+        m_tmp_header = NULL;
     }
 
     DWORD cbSize = MAX_PATH;
@@ -759,6 +774,7 @@ const WCHAR* CHttp::GetReturnTextIdW()  // "OK"
     if (m_tmp_header)
     {
         FreeMemory(m_tmp_header);
+        m_tmp_header = NULL;
     }
 
     DWORD cbSize = MAX_PATH;
@@ -784,6 +800,7 @@ const WCHAR* CHttp::GetDataLenthW()     // 返回正文数据长度(出去头部)
     if (m_tmp_header)
     {
         FreeMemory(m_tmp_header);
+        m_tmp_header = NULL;
     }
 
     DWORD cbSize = MAX_PATH;
@@ -825,6 +842,7 @@ const WCHAR* CHttp::GetSetCookieW()     // 返回新的 Cookie WINHTTP_QUERY_SET_COO
     if (m_tmp_header)
     {
         FreeMemory(m_tmp_header);
+        m_tmp_header = NULL;
     }
 
     DWORD cbSize = MAX_PATH*2;
@@ -850,6 +868,7 @@ const char* CHttp::GetReturnCodeIdA()  // "200" "404" "500"
         if (m_tmp_string)
         {
             FreeMemory(m_tmp_string);
+            m_tmp_string = NULL;
         }
         m_tmp_string = WideToMul(lpData);
         return m_tmp_string;
@@ -865,6 +884,7 @@ const char* CHttp::GetReturnTextIdA()  // "OK"
         if (m_tmp_string)
         {
             FreeMemory(m_tmp_string);
+            m_tmp_string = NULL;
         }
         m_tmp_string = WideToMul(lpData);
         return m_tmp_string;
@@ -880,6 +900,7 @@ const char* CHttp::GetDataLenthA()     // 返回正文数据长度(出去头部)
         if (m_tmp_string)
         {
             FreeMemory(m_tmp_string);
+            m_tmp_string = NULL;
         }
         m_tmp_string = WideToMul(lpData);
         return m_tmp_string;
@@ -895,6 +916,7 @@ const char* CHttp::GetSetCookieA()
         if (m_tmp_string)
         {
             FreeMemory(m_tmp_string);
+            m_tmp_string = NULL;
         }
         m_tmp_string = WideToMul(lpData);
         return m_tmp_string;
@@ -912,6 +934,7 @@ const char* CHttp::GetETagA()
         if (m_tmp_string)
         {
             FreeMemory(m_tmp_string);
+            m_tmp_string = NULL;
         }
         m_tmp_string = WideToMul(lpData);
         return m_tmp_string;
@@ -928,6 +951,7 @@ const WCHAR* CHttp::GetETagW()
     if (m_tmp_header)
     {
         FreeMemory(m_tmp_header);
+        m_tmp_header = NULL;
     }
 
     DWORD cbSize = MAX_PATH*2;
