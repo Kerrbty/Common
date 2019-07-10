@@ -203,7 +203,6 @@ void MD5Transform(unsigned int state[4], unsigned char block[64]) {
 
 inline void* calcMD5(void* inBuf, int inlen, void* outBuf, int outlen) 
 {
-
     MD5_CTX ctx = {0};
 
     if (inBuf == NULL || outBuf == NULL || outlen < 16 )
