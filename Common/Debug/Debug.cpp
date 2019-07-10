@@ -82,6 +82,7 @@ int _dbgfprintA(FILE* stream, const char* lpszFormant, ...)
     va_end(args);
 
     stSize = fprintf(stream, "%s", szBuffer);
+    fflush(stream);
     HeapFree(GetProcessHeap(), HEAP_NO_SERIALIZE, szBuffer);
     return stSize;
 }
@@ -106,6 +107,7 @@ int _dbgfprintW(FILE* stream, const wchar_t* lpszFormant, ...)
     va_end(args);
 
     stSize = fwprintf(stream, L"%s", szBuffer);
+    fflush(stream);
     HeapFree(GetProcessHeap(), HEAP_NO_SERIALIZE, szBuffer);
     return stSize;
 }
