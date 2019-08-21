@@ -8,71 +8,71 @@
 #pragma warning(disable : 4996)
 
 //////////////////////////////////////////////////////////////////////////
-// ÇëÇóÍ·
+// è¯·æ±‚å¤´
 // /*
-// Accept              Ö¸¶¨¿Í»§¶ËÄÜ¹»½ÓÊÕµÄÄÚÈİÀàĞÍ                                    Accept: text/plain, text/html
-// Accept-Charset      ä¯ÀÀÆ÷¿ÉÒÔ½ÓÊÜµÄ×Ö·û±àÂë¼¯¡£                                    Accept-Charset: iso-8859-5
-// Accept-Encoding     Ö¸¶¨ä¯ÀÀÆ÷¿ÉÒÔÖ§³ÖµÄweb·şÎñÆ÷·µ»ØÄÚÈİÑ¹Ëõ±àÂëÀàĞÍ¡£             Accept-Encoding: compress, gzip
-// Accept-Language     ä¯ÀÀÆ÷¿É½ÓÊÜµÄÓïÑÔ                                              Accept-Language: en,zh
-// Accept-Ranges       ¿ÉÒÔÇëÇóÍøÒ³ÊµÌåµÄÒ»¸ö»òÕß¶à¸ö×Ó·¶Î§×Ö¶Î                        Accept-Ranges: bytes
-// Authorization       HTTPÊÚÈ¨µÄÊÚÈ¨Ö¤Êé                                              Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-// Cache-Control       Ö¸¶¨ÇëÇóºÍÏìÓ¦×ñÑ­µÄ»º´æ»úÖÆ                                    Cache-Control: no-cache
-// Connection          ±íÊ¾ÊÇ·ñĞèÒª³Ö¾ÃÁ¬½Ó¡££¨HTTP 1.1Ä¬ÈÏ½øĞĞ³Ö¾ÃÁ¬½Ó£©              Connection: close
-// Cookie    HTTP      ÇëÇó·¢ËÍÊ±£¬»á°Ñ±£´æÔÚ¸ÃÇëÇóÓòÃûÏÂµÄËùÓĞcookieÖµÒ»Æğ·¢ËÍ¸øweb·şÎñÆ÷¡£    Cookie: $Version=1; Skin=new;
-// Content-Length      ÇëÇóµÄÄÚÈİ³¤¶È                                                  Content-Length: 348
-// Content-Type        ÇëÇóµÄÓëÊµÌå¶ÔÓ¦µÄMIMEĞÅÏ¢                                      Content-Type: application/x-www-form-urlencoded
-// Date                ÇëÇó·¢ËÍµÄÈÕÆÚºÍÊ±¼ä                                            Date: Tue, 15 Nov 2010 08:12:31 GMT
-// Expect              ÇëÇóµÄÌØ¶¨µÄ·şÎñÆ÷ĞĞÎª                                          Expect: 100-continue
-// From                ·¢³öÇëÇóµÄÓÃ»§µÄEmail                                           From: user@email.com
-// Host                Ö¸¶¨ÇëÇóµÄ·şÎñÆ÷µÄÓòÃûºÍ¶Ë¿ÚºÅ                                  Host: www.zcmhi.com
-// If-Match            Ö»ÓĞÇëÇóÄÚÈİÓëÊµÌåÏàÆ¥Åä²ÅÓĞĞ§                                  If-Match: ¡°737060cd8c284d8af7ad3082f209582d¡±
-// If-Modified-Since   Èç¹ûÇëÇóµÄ²¿·ÖÔÚÖ¸¶¨Ê±¼äÖ®ºó±»ĞŞ¸ÄÔòÇëÇó³É¹¦£¬Î´±»ĞŞ¸ÄÔò·µ»Ø304´úÂë    If-Modified-Since: Sat, 29 Oct 2010 19:43:31 GMT
-// If-None-Match       Èç¹ûÄÚÈİÎ´¸Ä±ä·µ»Ø304´úÂë£¬²ÎÊıÎª·şÎñÆ÷ÏÈÇ°·¢ËÍµÄEtag£¬Óë·şÎñÆ÷»ØÓ¦µÄEtag±È½ÏÅĞ¶ÏÊÇ·ñ¸Ä±ä    If-None-Match: ¡°737060cd8c284d8af7ad3082f209582d¡±
-// If-Range            Èç¹ûÊµÌåÎ´¸Ä±ä£¬·şÎñÆ÷·¢ËÍ¿Í»§¶Ë¶ªÊ§µÄ²¿·Ö£¬·ñÔò·¢ËÍÕû¸öÊµÌå¡£²ÎÊıÒ²ÎªEtag    If-Range: ¡°737060cd8c284d8af7ad3082f209582d¡±
-// If-Unmodified-Since Ö»ÔÚÊµÌåÔÚÖ¸¶¨Ê±¼äÖ®ºóÎ´±»ĞŞ¸Ä²ÅÇëÇó³É¹¦                        If-Unmodified-Since: Sat, 29 Oct 2010 19:43:31 GMT
-// Max-Forwards        ÏŞÖÆĞÅÏ¢Í¨¹ı´úÀíºÍÍø¹Ø´«ËÍµÄÊ±¼ä                                Max-Forwards: 10
-// Pragma              ÓÃÀ´°üº¬ÊµÏÖÌØ¶¨µÄÖ¸Áî                                          Pragma: no-cache
-// Proxy-Authorization Á¬½Óµ½´úÀíµÄÊÚÈ¨Ö¤Êé                                            Proxy-Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
-// Range               Ö»ÇëÇóÊµÌåµÄÒ»²¿·Ö£¬Ö¸¶¨·¶Î§                                    Range: bytes=500-999
-// Referer             ÏÈÇ°ÍøÒ³µÄµØÖ·£¬µ±Ç°ÇëÇóÍøÒ³½ôËæÆäºó,¼´À´Â·                     Referer: http://www.zcmhi.com/archives/71.html
-// TE                  ¿Í»§¶ËÔ¸Òâ½ÓÊÜµÄ´«Êä±àÂë£¬²¢Í¨Öª·şÎñÆ÷½ÓÊÜ½ÓÊÜÎ²¼ÓÍ·ĞÅÏ¢        TE: trailers,deflate;q=0.5
-// Upgrade             Ïò·şÎñÆ÷Ö¸¶¨Ä³ÖÖ´«ÊäĞ­ÒéÒÔ±ã·şÎñÆ÷½øĞĞ×ª»»£¨Èç¹ûÖ§³Ö£©          Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11
-// User-Agent          User-AgentµÄÄÚÈİ°üº¬·¢³öÇëÇóµÄÓÃ»§ĞÅÏ¢                          User-Agent: Mozilla/5.0 (Linux; X11)
-// Via                 Í¨ÖªÖĞ¼äÍø¹Ø»ò´úÀí·şÎñÆ÷µØÖ·£¬Í¨ĞÅĞ­Òé                          Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)
-// Warning             ¹ØÓÚÏûÏ¢ÊµÌåµÄ¾¯¸æĞÅÏ¢                                          Warn: 199 Miscellaneous warning
+// Accept              æŒ‡å®šå®¢æˆ·ç«¯èƒ½å¤Ÿæ¥æ”¶çš„å†…å®¹ç±»å‹                                    Accept: text/plain, text/html
+// Accept-Charset      æµè§ˆå™¨å¯ä»¥æ¥å—çš„å­—ç¬¦ç¼–ç é›†ã€‚                                    Accept-Charset: iso-8859-5
+// Accept-Encoding     æŒ‡å®šæµè§ˆå™¨å¯ä»¥æ”¯æŒçš„webæœåŠ¡å™¨è¿”å›å†…å®¹å‹ç¼©ç¼–ç ç±»å‹ã€‚             Accept-Encoding: compress, gzip
+// Accept-Language     æµè§ˆå™¨å¯æ¥å—çš„è¯­è¨€                                              Accept-Language: en,zh
+// Accept-Ranges       å¯ä»¥è¯·æ±‚ç½‘é¡µå®ä½“çš„ä¸€ä¸ªæˆ–è€…å¤šä¸ªå­èŒƒå›´å­—æ®µ                        Accept-Ranges: bytes
+// Authorization       HTTPæˆæƒçš„æˆæƒè¯ä¹¦                                              Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+// Cache-Control       æŒ‡å®šè¯·æ±‚å’Œå“åº”éµå¾ªçš„ç¼“å­˜æœºåˆ¶                                    Cache-Control: no-cache
+// Connection          è¡¨ç¤ºæ˜¯å¦éœ€è¦æŒä¹…è¿æ¥ã€‚ï¼ˆHTTP 1.1é»˜è®¤è¿›è¡ŒæŒä¹…è¿æ¥ï¼‰              Connection: close
+// Cookie    HTTP      è¯·æ±‚å‘é€æ—¶ï¼Œä¼šæŠŠä¿å­˜åœ¨è¯¥è¯·æ±‚åŸŸåä¸‹çš„æ‰€æœ‰cookieå€¼ä¸€èµ·å‘é€ç»™webæœåŠ¡å™¨ã€‚    Cookie: $Version=1; Skin=new;
+// Content-Length      è¯·æ±‚çš„å†…å®¹é•¿åº¦                                                  Content-Length: 348
+// Content-Type        è¯·æ±‚çš„ä¸å®ä½“å¯¹åº”çš„MIMEä¿¡æ¯                                      Content-Type: application/x-www-form-urlencoded
+// Date                è¯·æ±‚å‘é€çš„æ—¥æœŸå’Œæ—¶é—´                                            Date: Tue, 15 Nov 2010 08:12:31 GMT
+// Expect              è¯·æ±‚çš„ç‰¹å®šçš„æœåŠ¡å™¨è¡Œä¸º                                          Expect: 100-continue
+// From                å‘å‡ºè¯·æ±‚çš„ç”¨æˆ·çš„Email                                           From: user@email.com
+// Host                æŒ‡å®šè¯·æ±‚çš„æœåŠ¡å™¨çš„åŸŸåå’Œç«¯å£å·                                  Host: www.zcmhi.com
+// If-Match            åªæœ‰è¯·æ±‚å†…å®¹ä¸å®ä½“ç›¸åŒ¹é…æ‰æœ‰æ•ˆ                                  If-Match: â€œ737060cd8c284d8af7ad3082f209582dâ€
+// If-Modified-Since   å¦‚æœè¯·æ±‚çš„éƒ¨åˆ†åœ¨æŒ‡å®šæ—¶é—´ä¹‹åè¢«ä¿®æ”¹åˆ™è¯·æ±‚æˆåŠŸï¼Œæœªè¢«ä¿®æ”¹åˆ™è¿”å›304ä»£ç     If-Modified-Since: Sat, 29 Oct 2010 19:43:31 GMT
+// If-None-Match       å¦‚æœå†…å®¹æœªæ”¹å˜è¿”å›304ä»£ç ï¼Œå‚æ•°ä¸ºæœåŠ¡å™¨å…ˆå‰å‘é€çš„Etagï¼Œä¸æœåŠ¡å™¨å›åº”çš„Etagæ¯”è¾ƒåˆ¤æ–­æ˜¯å¦æ”¹å˜    If-None-Match: â€œ737060cd8c284d8af7ad3082f209582dâ€
+// If-Range            å¦‚æœå®ä½“æœªæ”¹å˜ï¼ŒæœåŠ¡å™¨å‘é€å®¢æˆ·ç«¯ä¸¢å¤±çš„éƒ¨åˆ†ï¼Œå¦åˆ™å‘é€æ•´ä¸ªå®ä½“ã€‚å‚æ•°ä¹Ÿä¸ºEtag    If-Range: â€œ737060cd8c284d8af7ad3082f209582dâ€
+// If-Unmodified-Since åªåœ¨å®ä½“åœ¨æŒ‡å®šæ—¶é—´ä¹‹åæœªè¢«ä¿®æ”¹æ‰è¯·æ±‚æˆåŠŸ                        If-Unmodified-Since: Sat, 29 Oct 2010 19:43:31 GMT
+// Max-Forwards        é™åˆ¶ä¿¡æ¯é€šè¿‡ä»£ç†å’Œç½‘å…³ä¼ é€çš„æ—¶é—´                                Max-Forwards: 10
+// Pragma              ç”¨æ¥åŒ…å«å®ç°ç‰¹å®šçš„æŒ‡ä»¤                                          Pragma: no-cache
+// Proxy-Authorization è¿æ¥åˆ°ä»£ç†çš„æˆæƒè¯ä¹¦                                            Proxy-Authorization: Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==
+// Range               åªè¯·æ±‚å®ä½“çš„ä¸€éƒ¨åˆ†ï¼ŒæŒ‡å®šèŒƒå›´                                    Range: bytes=500-999
+// Referer             å…ˆå‰ç½‘é¡µçš„åœ°å€ï¼Œå½“å‰è¯·æ±‚ç½‘é¡µç´§éšå…¶å,å³æ¥è·¯                     Referer: http://www.zcmhi.com/archives/71.html
+// TE                  å®¢æˆ·ç«¯æ„¿æ„æ¥å—çš„ä¼ è¾“ç¼–ç ï¼Œå¹¶é€šçŸ¥æœåŠ¡å™¨æ¥å—æ¥å—å°¾åŠ å¤´ä¿¡æ¯        TE: trailers,deflate;q=0.5
+// Upgrade             å‘æœåŠ¡å™¨æŒ‡å®šæŸç§ä¼ è¾“åè®®ä»¥ä¾¿æœåŠ¡å™¨è¿›è¡Œè½¬æ¢ï¼ˆå¦‚æœæ”¯æŒï¼‰          Upgrade: HTTP/2.0, SHTTP/1.3, IRC/6.9, RTA/x11
+// User-Agent          User-Agentçš„å†…å®¹åŒ…å«å‘å‡ºè¯·æ±‚çš„ç”¨æˆ·ä¿¡æ¯                          User-Agent: Mozilla/5.0 (Linux; X11)
+// Via                 é€šçŸ¥ä¸­é—´ç½‘å…³æˆ–ä»£ç†æœåŠ¡å™¨åœ°å€ï¼Œé€šä¿¡åè®®                          Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)
+// Warning             å…³äºæ¶ˆæ¯å®ä½“çš„è­¦å‘Šä¿¡æ¯                                          Warn: 199 Miscellaneous warning
 // */ 
 
 //////////////////////////////////////////////////////////////////////////
-// ·µ»Ø 
+// è¿”å› 
 // /*
-// Accept-Ranges       ±íÃ÷·şÎñÆ÷ÊÇ·ñÖ§³ÖÖ¸¶¨·¶Î§ÇëÇó¼°ÄÄÖÖÀàĞÍµÄ·Ö¶ÎÇëÇó              Accept-Ranges: bytes
-// Age                 ´ÓÔ­Ê¼·şÎñÆ÷µ½´úÀí»º´æĞÎ³ÉµÄ¹ÀËãÊ±¼ä£¨ÒÔÃë¼Æ£¬·Ç¸º£©            Age: 12
-// Allow               ¶ÔÄ³ÍøÂç×ÊÔ´µÄÓĞĞ§µÄÇëÇóĞĞÎª£¬²»ÔÊĞíÔò·µ»Ø405                   Allow: GET, HEAD
-// Cache-Control       ¸æËßËùÓĞµÄ»º´æ»úÖÆÊÇ·ñ¿ÉÒÔ»º´æ¼°ÄÄÖÖÀàĞÍ                        Cache-Control: no-cache
-// Content-Encoding    web·şÎñÆ÷Ö§³ÖµÄ·µ»ØÄÚÈİÑ¹Ëõ±àÂëÀàĞÍ¡£                           Content-Encoding: gzip
-// Content-Language    ÏìÓ¦ÌåµÄÓïÑÔ                                                    Content-Language: en,zh
-// Content-Length      ÏìÓ¦ÌåµÄ³¤¶È                                                    Content-Length: 348
-// Content-Location    ÇëÇó×ÊÔ´¿ÉÌæ´úµÄ±¸ÓÃµÄÁíÒ»µØÖ·                                  Content-Location: /index.htm
-// Content-MD5         ·µ»Ø×ÊÔ´µÄMD5Ğ£ÑéÖµ                                             Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==
-// Content-Range       ÔÚÕû¸ö·µ»ØÌåÖĞ±¾²¿·ÖµÄ×Ö½ÚÎ»ÖÃ                                  Content-Range: bytes 21010-47021/47022
-// Content-Type        ·µ»ØÄÚÈİµÄMIMEÀàĞÍ                                              Content-Type: text/html; charset=utf-8
-// Date                Ô­Ê¼·şÎñÆ÷ÏûÏ¢·¢³öµÄÊ±¼ä                                        Date: Tue, 15 Nov 2010 08:12:31 GMT
-// ETag                ÇëÇó±äÁ¿µÄÊµÌå±êÇ©µÄµ±Ç°Öµ                                      ETag: "737060cd8c284d8af7ad3082f209582d"
-// Expires             ÏìÓ¦¹ıÆÚµÄÈÕÆÚºÍÊ±¼ä                                            Expires: Thu, 01 Dec 2010 16:00:00 GMT
-// Last-Modified       ÇëÇó×ÊÔ´µÄ×îºóĞŞ¸ÄÊ±¼ä                                          Last-Modified: Tue, 15 Nov 2010 12:45:26 GMT
-// Location            ÓÃÀ´ÖØ¶¨Ïò½ÓÊÕ·½µ½·ÇÇëÇóURLµÄÎ»ÖÃÀ´Íê³ÉÇëÇó»ò±êÊ¶ĞÂµÄ×ÊÔ´       Location: http://www.zcmhi.com/archives/94.html
-// Pragma              °üÀ¨ÊµÏÖÌØ¶¨µÄÖ¸Áî£¬Ëü¿ÉÓ¦ÓÃµ½ÏìÓ¦Á´ÉÏµÄÈÎºÎ½ÓÊÕ·½              Pragma: no-cache
-// Proxy-Authenticate  ËüÖ¸³öÈÏÖ¤·½°¸ºÍ¿ÉÓ¦ÓÃµ½´úÀíµÄ¸ÃURLÉÏµÄ²ÎÊı                     Proxy-Authenticate: Basic
-// refresh             Ó¦ÓÃÓÚÖØ¶¨Ïò»òÒ»¸öĞÂµÄ×ÊÔ´±»´´Ôì£¬ÔÚ5ÃëÖ®ºóÖØ¶¨Ïò£¨ÓÉÍø¾°Ìá³ö£¬±»´ó²¿·Öä¯ÀÀÆ÷Ö§³Ö£©    Refresh: 5; url=http://www.zcmhi.com/archives/94.html
-// Retry-After         Èç¹ûÊµÌåÔİÊ±²»¿ÉÈ¡£¬Í¨Öª¿Í»§¶ËÔÚÖ¸¶¨Ê±¼äÖ®ºóÔÙ´Î³¢ÊÔ            Retry-After: 120
-// Server              web·şÎñÆ÷Èí¼şÃû³Æ                                               Server: Apache/1.3.27 (Unix) (Red-Hat/Linux)
-// Set-Cookie          ÉèÖÃHttp Cookie                                                 Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1
-// Trailer             Ö¸³öÍ·ÓòÔÚ·Ö¿é´«Êä±àÂëµÄÎ²²¿´æÔÚ                                Trailer: Max-Forwards
-// Transfer-Encoding   ÎÄ¼ş´«Êä±àÂë                                                    Transfer-Encoding:chunked
-// Vary                ¸æËßÏÂÓÎ´úÀíÊÇÊ¹ÓÃ»º´æÏìÓ¦»¹ÊÇ´ÓÔ­Ê¼·şÎñÆ÷ÇëÇó                  Vary: *
-// Via                 ¸æÖª´úÀí¿Í»§¶ËÏìÓ¦ÊÇÍ¨¹ıÄÄÀï·¢ËÍµÄ                              Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)
-// Warning             ¾¯¸æÊµÌå¿ÉÄÜ´æÔÚµÄÎÊÌâ                                          Warning: 199 Miscellaneous warning
-// WWW-Authenticate    ±íÃ÷¿Í»§¶ËÇëÇóÊµÌåÓ¦¸ÃÊ¹ÓÃµÄÊÚÈ¨·½°¸                            WWW-Authenticate: Basic
+// Accept-Ranges       è¡¨æ˜æœåŠ¡å™¨æ˜¯å¦æ”¯æŒæŒ‡å®šèŒƒå›´è¯·æ±‚åŠå“ªç§ç±»å‹çš„åˆ†æ®µè¯·æ±‚              Accept-Ranges: bytes
+// Age                 ä»åŸå§‹æœåŠ¡å™¨åˆ°ä»£ç†ç¼“å­˜å½¢æˆçš„ä¼°ç®—æ—¶é—´ï¼ˆä»¥ç§’è®¡ï¼Œéè´Ÿï¼‰            Age: 12
+// Allow               å¯¹æŸç½‘ç»œèµ„æºçš„æœ‰æ•ˆçš„è¯·æ±‚è¡Œä¸ºï¼Œä¸å…è®¸åˆ™è¿”å›405                   Allow: GET, HEAD
+// Cache-Control       å‘Šè¯‰æ‰€æœ‰çš„ç¼“å­˜æœºåˆ¶æ˜¯å¦å¯ä»¥ç¼“å­˜åŠå“ªç§ç±»å‹                        Cache-Control: no-cache
+// Content-Encoding    webæœåŠ¡å™¨æ”¯æŒçš„è¿”å›å†…å®¹å‹ç¼©ç¼–ç ç±»å‹ã€‚                           Content-Encoding: gzip
+// Content-Language    å“åº”ä½“çš„è¯­è¨€                                                    Content-Language: en,zh
+// Content-Length      å“åº”ä½“çš„é•¿åº¦                                                    Content-Length: 348
+// Content-Location    è¯·æ±‚èµ„æºå¯æ›¿ä»£çš„å¤‡ç”¨çš„å¦ä¸€åœ°å€                                  Content-Location: /index.htm
+// Content-MD5         è¿”å›èµ„æºçš„MD5æ ¡éªŒå€¼                                             Content-MD5: Q2hlY2sgSW50ZWdyaXR5IQ==
+// Content-Range       åœ¨æ•´ä¸ªè¿”å›ä½“ä¸­æœ¬éƒ¨åˆ†çš„å­—èŠ‚ä½ç½®                                  Content-Range: bytes 21010-47021/47022
+// Content-Type        è¿”å›å†…å®¹çš„MIMEç±»å‹                                              Content-Type: text/html; charset=utf-8
+// Date                åŸå§‹æœåŠ¡å™¨æ¶ˆæ¯å‘å‡ºçš„æ—¶é—´                                        Date: Tue, 15 Nov 2010 08:12:31 GMT
+// ETag                è¯·æ±‚å˜é‡çš„å®ä½“æ ‡ç­¾çš„å½“å‰å€¼                                      ETag: "737060cd8c284d8af7ad3082f209582d"
+// Expires             å“åº”è¿‡æœŸçš„æ—¥æœŸå’Œæ—¶é—´                                            Expires: Thu, 01 Dec 2010 16:00:00 GMT
+// Last-Modified       è¯·æ±‚èµ„æºçš„æœ€åä¿®æ”¹æ—¶é—´                                          Last-Modified: Tue, 15 Nov 2010 12:45:26 GMT
+// Location            ç”¨æ¥é‡å®šå‘æ¥æ”¶æ–¹åˆ°éè¯·æ±‚URLçš„ä½ç½®æ¥å®Œæˆè¯·æ±‚æˆ–æ ‡è¯†æ–°çš„èµ„æº       Location: http://www.zcmhi.com/archives/94.html
+// Pragma              åŒ…æ‹¬å®ç°ç‰¹å®šçš„æŒ‡ä»¤ï¼Œå®ƒå¯åº”ç”¨åˆ°å“åº”é“¾ä¸Šçš„ä»»ä½•æ¥æ”¶æ–¹              Pragma: no-cache
+// Proxy-Authenticate  å®ƒæŒ‡å‡ºè®¤è¯æ–¹æ¡ˆå’Œå¯åº”ç”¨åˆ°ä»£ç†çš„è¯¥URLä¸Šçš„å‚æ•°                     Proxy-Authenticate: Basic
+// refresh             åº”ç”¨äºé‡å®šå‘æˆ–ä¸€ä¸ªæ–°çš„èµ„æºè¢«åˆ›é€ ï¼Œåœ¨5ç§’ä¹‹åé‡å®šå‘ï¼ˆç”±ç½‘æ™¯æå‡ºï¼Œè¢«å¤§éƒ¨åˆ†æµè§ˆå™¨æ”¯æŒï¼‰    Refresh: 5; url=http://www.zcmhi.com/archives/94.html
+// Retry-After         å¦‚æœå®ä½“æš‚æ—¶ä¸å¯å–ï¼Œé€šçŸ¥å®¢æˆ·ç«¯åœ¨æŒ‡å®šæ—¶é—´ä¹‹åå†æ¬¡å°è¯•            Retry-After: 120
+// Server              webæœåŠ¡å™¨è½¯ä»¶åç§°                                               Server: Apache/1.3.27 (Unix) (Red-Hat/Linux)
+// Set-Cookie          è®¾ç½®Http Cookie                                                 Set-Cookie: UserID=JohnDoe; Max-Age=3600; Version=1
+// Trailer             æŒ‡å‡ºå¤´åŸŸåœ¨åˆ†å—ä¼ è¾“ç¼–ç çš„å°¾éƒ¨å­˜åœ¨                                Trailer: Max-Forwards
+// Transfer-Encoding   æ–‡ä»¶ä¼ è¾“ç¼–ç                                                     Transfer-Encoding:chunked
+// Vary                å‘Šè¯‰ä¸‹æ¸¸ä»£ç†æ˜¯ä½¿ç”¨ç¼“å­˜å“åº”è¿˜æ˜¯ä»åŸå§‹æœåŠ¡å™¨è¯·æ±‚                  Vary: *
+// Via                 å‘ŠçŸ¥ä»£ç†å®¢æˆ·ç«¯å“åº”æ˜¯é€šè¿‡å“ªé‡Œå‘é€çš„                              Via: 1.0 fred, 1.1 nowhere.com (Apache/1.1)
+// Warning             è­¦å‘Šå®ä½“å¯èƒ½å­˜åœ¨çš„é—®é¢˜                                          Warning: 199 Miscellaneous warning
+// WWW-Authenticate    è¡¨æ˜å®¢æˆ·ç«¯è¯·æ±‚å®ä½“åº”è¯¥ä½¿ç”¨çš„æˆæƒæ–¹æ¡ˆ                            WWW-Authenticate: Basic
 // */
 
 HINTERNET OpenSession(LPCWSTR UserAgent)
@@ -122,14 +122,13 @@ BOOL AddRequestHeaders(HINTERNET hRequest, LPCWSTR header)
 {
     DWORD len = wcslen(header);
 #ifdef USE_WINHTTP
-    return WinHttpAddRequestHeaders(hRequest, header, len, WINHTTP_ADDREQ_FLAG_ADD);
+    return WinHttpAddRequestHeaders(hRequest, header, len, WINHTTP_ADDREQ_FLAG_ADD|WINHTTP_ADDREQ_FLAG_REPLACE);
 #else
     return HttpAddRequestHeadersW(hRequest, header, len, HTTP_ADDREQ_FLAG_ADD|HTTP_ADDREQ_FLAG_REPLACE);
 #endif
 }
 
-
-// ²»¼ì²âÔ¶³Ì·şÎñÆ÷µÄsslÖ¡ÊıÊÇ·ñ¹ıÆÚ 
+// ä¸æ£€æµ‹è¿œç¨‹æœåŠ¡å™¨çš„sslå¸§æ•°æ˜¯å¦è¿‡æœŸ 
 BOOL SetRequestIgnoreCert(HINTERNET hRequest)
 {
     DWORD dwFlags;
@@ -228,7 +227,7 @@ VOID CloseInternetHandle(HINTERNET hInternet)
 // Class
 //////////////////////////////////////////////////////////////////////////
 
-// ÉèÖÃ²ÎÊı 
+// è®¾ç½®å‚æ•° 
 #define SetFuncBody(_name, _value)  BOOL CHttp::##_name##A(LPCSTR szTmp) \
 {\
     BOOL retval = FALSE; \
@@ -320,7 +319,7 @@ void CHttp::CloseRequest()
     }
 }
 
-// ÉèÖÃ URLĞÅÏ¢ 
+// è®¾ç½® URLä¿¡æ¯ 
 BOOL CHttp::SetUrlA(LPCSTR szUrl)
 {
     if (szUrl == NULL)
@@ -328,7 +327,7 @@ BOOL CHttp::SetUrlA(LPCSTR szUrl)
         return FALSE;
     }
 
-    // Èç¹ûÒÑ¾­ÇëÇó¹ıÍøÕ¾ÁË£¬½ö¹Ø±ÕÒÑÓĞÁ¬½Ó, ²»Çå³ıÖ®Ç°Êı¾İ 
+    // å¦‚æœå·²ç»è¯·æ±‚è¿‡ç½‘ç«™äº†ï¼Œä»…å…³é—­å·²æœ‰è¿æ¥, ä¸æ¸…é™¤ä¹‹å‰æ•°æ® 
     if (m_IsRequest)
     {
         CloseRequest();
@@ -355,7 +354,7 @@ BOOL CHttp::SetUrlW(LPCWSTR szUrl)
     return TRUE;
 }
 
-// ÉèÖÃCookie 
+// è®¾ç½®Cookie 
 BOOL CHttp::SetCookieA(LPCSTR szCookie)
 {
     if (szCookie == NULL)
@@ -417,7 +416,7 @@ BOOL CHttp::AddCookieW(LPCWSTR szCookie)
         return retval;
     }
 
-    // ÊÇ·ñÎª¿Õ 
+    // æ˜¯å¦ä¸ºç©º 
     if (m_cookies == NULL)
     {
         m_cookies = (LPWSTR)AllocMemory((wcslen(szCookie)+8)*sizeof(WCHAR));
@@ -443,11 +442,11 @@ BOOL CHttp::AddCookieW(LPCWSTR szCookie)
 
 SetFuncBody(SetETag, m_Tag);
 SetFuncBody(SetRange, m_Range);
-SetFuncBody(SetAccept, m_Accept);   // ½ÓÊÕµÄÎÄ¼şÀàĞÍ :  image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5 
-SetFuncBody(SetReferer, m_Referer);  // ÒıÓÃÍøÕ¾£¬Ìø×ªÖ®Ç°µÄÍøÕ¾ https://bbs.xxxxxx.com/ 
-SetFuncBody(SetUserAgent, m_UserAgent);  // Ê¹ÓÃµÄä¯ÀÀÆ÷´úÀíÀàĞÍ : Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko 
+SetFuncBody(SetAccept, m_Accept);   // æ¥æ”¶çš„æ–‡ä»¶ç±»å‹ :  image/png, image/svg+xml, image/*;q=0.8, */*;q=0.5 
+SetFuncBody(SetReferer, m_Referer);  // å¼•ç”¨ç½‘ç«™ï¼Œè·³è½¬ä¹‹å‰çš„ç½‘ç«™ https://bbs.xxxxxx.com/ 
+SetFuncBody(SetUserAgent, m_UserAgent);  // ä½¿ç”¨çš„æµè§ˆå™¨ä»£ç†ç±»å‹ : Mozilla/5.0 (Windows NT 6.1; WOW64; Trident/7.0; rv:11.0) like Gecko 
 SetFuncBody(SetContentType, m_ContentType);
-SetFuncBody(SetAcceptEncoding, m_AcceptEncoding); // ÊÇ·ñÑ¹Ëõ´«Êä : gzip, deflate 
+SetFuncBody(SetAcceptEncoding, m_AcceptEncoding); // æ˜¯å¦å‹ç¼©ä¼ è¾“ : gzip, deflate 
 SetFuncBody(SetAcceptLanguage, m_AcceptLanguage);
 
 
@@ -459,8 +458,8 @@ BOOL CHttp::SetIgnoreCert(BOOL bIgnore)
 }
 
 
-// Ìá½»ÇëÇóµÄ·½Ê½ GET/POST£¬ Ä¬ÈÏÎª GET 
-void CHttp::SetPost(BOOL bPost) // True Îª Post£¬ False Îª Get 
+// æäº¤è¯·æ±‚çš„æ–¹å¼ GET/POSTï¼Œ é»˜è®¤ä¸º GET 
+void CHttp::SetPost(BOOL bPost) // True ä¸º Postï¼Œ False ä¸º Get 
 {
     m_IsPost = bPost;
 }
@@ -550,7 +549,7 @@ BOOL  CHttp::IsPost()
     return m_IsPost;
 }
 
-// Çå³ıÈ«²¿Í·²¿´«ÊäÊı¾İ , ²»°üº¬URL¡¢Cookies 
+// æ¸…é™¤å…¨éƒ¨å¤´éƒ¨ä¼ è¾“æ•°æ® , ä¸åŒ…å«URLã€Cookies 
 void CHttp::CleanAllHeaderData()
 {
     m_IsPost = FALSE;
@@ -585,7 +584,7 @@ void CHttp::Reset()
 {
     CleanAllHeaderData();
 
-    // ÏÂ´ÎÇëÇó»¹¿ÉÒÔ¼ÌĞøÓÃµÄÊı¾İ£¬Èç¹ûÍ¬Ò»¸öÍøÕ¾ 
+    // ä¸‹æ¬¡è¯·æ±‚è¿˜å¯ä»¥ç»§ç»­ç”¨çš„æ•°æ®ï¼Œå¦‚æœåŒä¸€ä¸ªç½‘ç«™ 
     FreeMemory(m_cookies);
     m_cookies = NULL;
     FreeMemory(m_szurl);
@@ -651,7 +650,7 @@ BOOL CHttp::GetHttpRequestHeader()
         return FALSE;
     }
 
-    // ÉèÖÃÌá½»·½Ê½ 
+    // è®¾ç½®æäº¤æ–¹å¼ 
     // Open request.
     // api/ad/getimages
     if (m_IsPost)
@@ -667,19 +666,19 @@ BOOL CHttp::GetHttpRequestHeader()
         return FALSE;
     }
 
-    // ½ÓÊÕÎÄ¼şÀàĞÍ  
+    // æ¥æ”¶æ–‡ä»¶ç±»å‹  
     if (m_Accept)
     {
         AddHeaderReqStr(L"Accept", m_Accept);
     }
 
-    // ÒıÓÃÒ³Ãæ 
+    // å¼•ç”¨é¡µé¢ 
     if (m_Referer)
     {
         AddHeaderReqStr(L"Referer", m_Referer);
     }
 
-    // ½ÓÊÕ±àÂë  
+    // æ¥æ”¶ç¼–ç   
     if (m_AcceptEncoding)
     {
         AddHeaderReqStr(L"Accept-Encoding", m_AcceptEncoding);
@@ -713,19 +712,19 @@ BOOL CHttp::GetHttpRequestHeader()
         AddHeaderReqStr(L"If-Range", m_Tag);
     }
 
-    // Cookie ÉèÖÃ 
+    // Cookie è®¾ç½® 
     if (m_cookies)
     {
         AddHeaderReqStr(L"Cookie", m_cookies);
     }
 
-    // ÉèÖÃºöÂÔCERTÖ¤Êé±êÖ¾ ²¢ÇÒä¯ÀÀµÄÍøÒ³ÎªHTTPSÍøÕ¾ 
+    // è®¾ç½®å¿½ç•¥CERTè¯ä¹¦æ ‡å¿— å¹¶ä¸”æµè§ˆçš„ç½‘é¡µä¸ºHTTPSç½‘ç«™ 
     if (m_Ignore_Cert && m_url.GetScheme() == INTERNET_SCHEME_HTTPS)
     {
         SetRequestIgnoreCert(m_hRequest);
     }
 
-    // ·¢ËÍÇëÇó 
+    // å‘é€è¯·æ±‚ 
     // Send get/post data. 
     if (SendRequest(m_hRequest, m_PostData, m_dwPostSize))
     {
@@ -791,7 +790,7 @@ const WCHAR* CHttp::GetReturnTextIdW()  // "OK"
     return NULL;
 }
 
-const WCHAR* CHttp::GetDataLenthW()     // ·µ»ØÕıÎÄÊı¾İ³¤¶È(³öÈ¥Í·²¿) 
+const WCHAR* CHttp::GetDataLenthW()     // è¿”å›æ­£æ–‡æ•°æ®é•¿åº¦(å‡ºå»å¤´éƒ¨) 
 {
     if (!m_IsRequest)
     {
@@ -833,7 +832,7 @@ DWORD CHttp::GetData(LPBYTE lpBuf, DWORD dwLenth)
     return dwGetLen;
 }
 
-const WCHAR* CHttp::GetSetCookieW()     // ·µ»ØĞÂµÄ Cookie WINHTTP_QUERY_SET_COOKIE/HTTP_QUERY_SET_COOKIE
+const WCHAR* CHttp::GetSetCookieW()     // è¿”å›æ–°çš„ Cookie WINHTTP_QUERY_SET_COOKIE/HTTP_QUERY_SET_COOKIE
 {
     if (!m_IsRequest)
     {
@@ -892,7 +891,7 @@ const char* CHttp::GetReturnTextIdA()  // "OK"
     return NULL;
 }
 
-const char* CHttp::GetDataLenthA()     // ·µ»ØÕıÎÄÊı¾İ³¤¶È(³öÈ¥Í·²¿) 
+const char* CHttp::GetDataLenthA()     // è¿”å›æ­£æ–‡æ•°æ®é•¿åº¦(å‡ºå»å¤´éƒ¨) 
 {
     LPCWSTR lpData = GetDataLenthW();
     if (lpData != NULL)
