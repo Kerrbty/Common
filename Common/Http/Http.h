@@ -2,7 +2,7 @@
 #define _CHTTP_ZXLY_2019_HEADER_HH_H
 #include <Windows.h>
 #include "AnalyzeURL.h"
-
+// #define USE_WINHTTP
 typedef void *HINTERNET;
 
 // 返回传送的dwSize大小，如果不等则退出接收环节 

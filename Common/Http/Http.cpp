@@ -122,12 +122,11 @@ BOOL AddRequestHeaders(HINTERNET hRequest, LPCWSTR header)
 {
     DWORD len = wcslen(header);
 #ifdef USE_WINHTTP
-    return WinHttpAddRequestHeaders(hRequest, header, len, WINHTTP_ADDREQ_FLAG_ADD);
+    return WinHttpAddRequestHeaders(hRequest, header, len, WINHTTP_ADDREQ_FLAG_ADD|WINHTTP_ADDREQ_FLAG_REPLACE);
 #else
     return HttpAddRequestHeadersW(hRequest, header, len, HTTP_ADDREQ_FLAG_ADD|HTTP_ADDREQ_FLAG_REPLACE);
 #endif
 }
-
 
 // 不检测远程服务器的ssl帧数是否过期 
 BOOL SetRequestIgnoreCert(HINTERNET hRequest)
