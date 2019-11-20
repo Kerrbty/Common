@@ -94,7 +94,7 @@ LPVOID GetRealProcAddress(LPVOID FuncAddr)
 
 
 // hook拷贝出来有些代码是跳转代码，需要看情况修正 
-void ResetOffset(LPVOID ProcAddress, PBYTE CopyCodeAddr, DWORD len)
+void ResetOffset(LPVOID ProcAddress /*源代码地址*/, PBYTE CopyCodeAddr /*拷贝出来的数据*/, DWORD len /*拷贝长度*/)
 {
     // "\xE9\x02\x00\x00\x00\xEB\xF9"
     // HotPatch
@@ -119,7 +119,6 @@ void ResetOffset(LPVOID ProcAddress, PBYTE CopyCodeAddr, DWORD len)
 //             ;
 //         }
     }
-
 
     DWORD item_len = 0; // 当前函数头指针的偏移长度 
     PBYTE ProcJmp = CopyCodeAddr;
