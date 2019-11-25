@@ -165,9 +165,9 @@ CURL::~CURL()
 const char ChangeChar[] = {'&', '+', '%', ' ', '?', '#', '=', '/', ':', '\\', '.'};
 
 // ±àÂëurl 
-BOOL WINAPI EncodeURLA(const char* szUrl, char* szDecodeUrl, DWORD dwbuflen)
+BOOL WINAPI EncodeURLA(const char* szUrl, char* szEncodeUrl, DWORD dwbuflen)
 {
-    if (szUrl == NULL || szDecodeUrl == NULL || dwbuflen == 0)
+    if (szUrl == NULL || szEncodeUrl == NULL || dwbuflen == 0)
     {
         return FALSE;
     }
@@ -190,13 +190,13 @@ BOOL WINAPI EncodeURLA(const char* szUrl, char* szDecodeUrl, DWORD dwbuflen)
         {
             ANSIToUTF8(szCopyUrl, allocbuf);
         }
-        char* po = szCopyUrl;
+        unsigned char* po = (unsigned char*)szCopyUrl;
         for (int i=0; i<dwbuflen-4;)
         {
             int k = 0;
             if (*po >= 0x80)
             {
-                sprintf(szDecodeUrl+i, "%%%02X", *po);
+                sprintf(szEncodeUrl+i, "%%%02X", *po);
                 i += 3;
             }
             else 
@@ -205,14 +205,14 @@ BOOL WINAPI EncodeURLA(const char* szUrl, char* szDecodeUrl, DWORD dwbuflen)
                 {
                     if (*po == ChangeChar[k])
                     {
-                        sprintf(szDecodeUrl+i, "%%%02X", *po);
+                        sprintf(szEncodeUrl+i, "%%%02X", *po);
                         i += 3;
                         break;
                     }
                 }
                 if (k == sizeof(ChangeChar)/sizeof(ChangeChar[0]))
                 {
-                    szDecodeUrl[i] = *po;
+                    szEncodeUrl[i] = *po;
                     i++;
                 }
             }

@@ -19,25 +19,29 @@ public:
         m_wzBuf = NULL;
     }
 
-    CMultiAndWide(PSTR szStr)
+    CMultiAndWide(PCSTR szStr)
     {
+        m_szBuf = NULL;
+        m_wzBuf = NULL;
         SetString(szStr);
     }
 
-    CMultiAndWide(PWSTR wzStr)
+    CMultiAndWide(PCWSTR wzStr)
     {
+        m_szBuf = NULL;
+        m_wzBuf = NULL;
         SetString(wzStr);
     }
 
-    void SetString(PSTR szStr);
-    void SetString(PWSTR wzStr);
+    void SetString(PCSTR szStr);
+    void SetString(PCWSTR wzStr);
 
-    PSTR GetMultiByte()
+    PCSTR GetMultiByte()
     {
         return m_szBuf;
     }
 
-    PWSTR GetWideChar()
+    PCWSTR GetWideChar()
     {
         return m_wzBuf;
     }

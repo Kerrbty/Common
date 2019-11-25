@@ -134,7 +134,7 @@ PSTR WideToMul( LPCWSTR str )
 }
 
 //////////////////////////////////////////////////////////////////////////
-void CMultiAndWide::SetString(PSTR szStr)
+void CMultiAndWide::SetString(PCSTR szStr)
 {
     if (szStr == NULL)
     {
@@ -155,7 +155,7 @@ void CMultiAndWide::SetString(PSTR szStr)
     m_wzBuf = MulToWide(m_szBuf);
 }
 
-void CMultiAndWide::SetString(PWSTR wzStr)
+void CMultiAndWide::SetString(PCWSTR wzStr)
 {
     if (wzStr == NULL)
     {

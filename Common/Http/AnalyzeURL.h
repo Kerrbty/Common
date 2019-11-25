@@ -34,7 +34,7 @@ private:
 
 BOOL WINAPI DecodeURLA(const char* szUrl, char* szDecodeUrl, DWORD dwbuflen); // ½âÂëurl 
 
-BOOL WINAPI EncodeURLA(const char* szUrl, char* szDecodeUrl, DWORD dwbuflen); // ±àÂëurl 
+BOOL WINAPI EncodeURLA(const char* szUrl, char* szEncodeUrl, DWORD dwbuflen); // ±àÂëurl 
 
 
 
