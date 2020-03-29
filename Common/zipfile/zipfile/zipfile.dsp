@@ -87,35 +87,35 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
-SOURCE=.\zlib\adler32.c
+SOURCE=..\..\zlib\adler32.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\compress.c
+SOURCE=..\..\zlib\compress.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\crc32.c
+SOURCE=..\..\zlib\crc32.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\deflate.c
+SOURCE=..\..\zlib\deflate.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\gzclose.c
+SOURCE=..\..\zlib\gzclose.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\gzlib.c
+SOURCE=..\..\zlib\gzlib.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\gzread.c
+SOURCE=..\..\zlib\gzread.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\gzwrite.c
+SOURCE=..\..\zlib\gzwrite.c
 # End Source File
 # Begin Source File
 
@@ -123,19 +123,19 @@ SOURCE=.\htziptools.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\infback.c
+SOURCE=..\..\zlib\infback.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\inffast.c
+SOURCE=..\..\zlib\inffast.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\inflate.c
+SOURCE=..\..\zlib\inflate.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\inftrees.c
+SOURCE=..\..\zlib\inftrees.c
 # End Source File
 # Begin Source File
 
@@ -151,11 +151,11 @@ SOURCE=.\mztools.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\trees.c
+SOURCE=..\..\zlib\trees.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\uncompr.c
+SOURCE=..\..\zlib\uncompr.c
 # End Source File
 # Begin Source File
 
@@ -167,7 +167,11 @@ SOURCE=.\zip.c
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\zutil.c
+SOURCE=..\..\zlib\zlib.def
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\zlib\zutil.c
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -175,7 +179,7 @@ SOURCE=.\zlib\zutil.c
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
 # Begin Source File
 
-SOURCE=.\zlib\crc32.h
+SOURCE=..\..\zlib\crc32.h
 # End Source File
 # Begin Source File
 
@@ -183,11 +187,11 @@ SOURCE=.\crypt.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\deflate.h
+SOURCE=..\..\zlib\deflate.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\gzguts.h
+SOURCE=..\..\zlib\gzguts.h
 # End Source File
 # Begin Source File
 
@@ -195,19 +199,19 @@ SOURCE=.\htziptools.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\inffast.h
+SOURCE=..\..\zlib\inffast.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\inffixed.h
+SOURCE=..\..\zlib\inffixed.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\inflate.h
+SOURCE=..\..\zlib\inflate.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\inftrees.h
+SOURCE=..\..\zlib\inftrees.h
 # End Source File
 # Begin Source File
 
@@ -227,7 +231,7 @@ SOURCE=.\resource.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\trees.h
+SOURCE=..\..\zlib\trees.h
 # End Source File
 # Begin Source File
 
@@ -239,7 +243,7 @@ SOURCE=.\zconf.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\zconf.h
+SOURCE=..\..\zlib\zconf.h
 # End Source File
 # Begin Source File
 
@@ -251,11 +255,11 @@ SOURCE=.\zlib.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\zlib.h
+SOURCE=..\..\zlib\zlib.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\zlib\zutil.h
+SOURCE=..\..\zlib\zutil.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

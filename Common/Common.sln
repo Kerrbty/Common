@@ -29,6 +29,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PV", "PV\PV.vcproj", "{7754
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "detours", "detours\detours.vcproj", "{66AB65A3-DAE6-4A7F-9BF9-903F4D6C39A7}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcproj", "{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -133,14 +135,6 @@ Global
 		{1E206777-C234-4BA1-9532-C752BFF3A1CE}.Release|Win32.Build.0 = Release|Win32
 		{1E206777-C234-4BA1-9532-C752BFF3A1CE}.Release|x64.ActiveCfg = Release|x64
 		{1E206777-C234-4BA1-9532-C752BFF3A1CE}.Release|x64.Build.0 = Release|x64
-
-
-
-
-
-
-
-
 		{7754B806-1C00-4B0E-B10F-9563748EC7DC}.Debug|Win32.ActiveCfg = Debug|Win32
 		{7754B806-1C00-4B0E-B10F-9563748EC7DC}.Debug|Win32.Build.0 = Debug|Win32
 		{7754B806-1C00-4B0E-B10F-9563748EC7DC}.Debug|x64.ActiveCfg = Debug|x64
@@ -157,6 +151,14 @@ Global
 		{66AB65A3-DAE6-4A7F-9BF9-903F4D6C39A7}.Release|Win32.Build.0 = Release|Win32
 		{66AB65A3-DAE6-4A7F-9BF9-903F4D6C39A7}.Release|x64.ActiveCfg = Release|x64
 		{66AB65A3-DAE6-4A7F-9BF9-903F4D6C39A7}.Release|x64.Build.0 = Release|x64
+		{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}.Debug|Win32.ActiveCfg = Debug|Win32
+		{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}.Debug|Win32.Build.0 = Debug|Win32
+		{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}.Debug|x64.ActiveCfg = Debug|x64
+		{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}.Debug|x64.Build.0 = Debug|x64
+		{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}.Release|Win32.ActiveCfg = Release|Win32
+		{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}.Release|Win32.Build.0 = Release|Win32
+		{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}.Release|x64.ActiveCfg = Release|x64
+		{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

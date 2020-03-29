@@ -109,6 +109,7 @@ public:
     const char* GetDataLenthA();     // 返回正文数据长度(出去头部) 
     DWORD       GetData(LPBYTE lpBuf, DWORD dwLenth);  // 获取http服务器返回正文  
     const char* GetSetCookieA();  
+    BOOL UnzipData(LPBYTE lpInData, DWORD InLenth, LPBYTE lpOutData, DWORD* OutLenth);  // gzip解压数据,返回真实需要的buffer大小 
 
     // WINHTTP_QUERY_ETAG   ->  ETag: "lr0ZzoawyyhskvuleG6PNUPXjzKs" 
     const char* GetETagA(); 

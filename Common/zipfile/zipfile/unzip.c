@@ -68,6 +68,13 @@
 #include <stdlib.h>
 #include <string.h>
 
+#ifdef _DEBUG
+#pragma comment(lib, "zlib_d.lib")
+#else
+#pragma comment(lib, "zlib.lib")
+#endif
+
+
 #ifndef NOUNCRYPT
         #define NOUNCRYPT
 #endif

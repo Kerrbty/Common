@@ -4,6 +4,13 @@
 #include "../StringFormat/StringFormat.h"
 #include <stdlib.h>
 #include <stdio.h>
+#include <zlib/zlib.h>
+
+#ifdef _DEBUG
+#pragma comment(lib, "zlib_d.lib")
+#else 
+#pragma comment(lib, "zlib.lib")
+#endif
 
 #pragma warning(disable : 4996)
 
@@ -831,6 +838,20 @@ DWORD CHttp::GetData(LPBYTE lpBuf, DWORD dwLenth)
     }
     return dwGetLen;
 }
+
+// gzip解压数据,返回真实需要的buffer大小 
+// BOOL UnzipData(LPBYTE lpInData, DWORD InLenth, LPBYTE lpOutData, DWORD* OutLenth)
+// {
+//     z_stream d_stream = { 0 };  
+//     d_stream.next_in = lpInData;
+//     d_stream.avail_in = InLenth;
+//     d_stream.next_out = lpOutData;
+//     d_stream.total_out = *OutLenth;
+// 
+//     if (inflateInit2(&d_stream, -MAX_WBITS) != Z_OK) 
+//         return FALSE;  
+//     return TRUE;
+// }
 
 const WCHAR* CHttp::GetSetCookieW()     // 返回新的 Cookie WINHTTP_QUERY_SET_COOKIE/HTTP_QUERY_SET_COOKIE
 {
