@@ -293,10 +293,6 @@
 			RelativePath=".\Http.h"
 			>
 		</File>
-		<File
-			RelativePath=".\Test.cpp"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

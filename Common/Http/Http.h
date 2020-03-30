@@ -66,6 +66,8 @@ public:
     // 提交请求的方式 GET/POST， 默认为 GET 
     void SetPost(BOOL bPost = TRUE); // True 为 Post， False 为 Get 
 
+    void SetAutoUnzip(BOOL bAutoUnzip = TRUE); // gzip数据自动解压,只有使用GetData一次性获取所有数据才有效 
+
     void SetXmlHttpRequest(BOOL bXml = TRUE);
 
     BOOL SetPostData(LPBYTE lpBuf, DWORD dwSize);
@@ -107,9 +109,9 @@ public:
     const char* GetReturnCodeIdA();  // "200" "404" "500"
     const char* GetReturnTextIdA();  // "OK"
     const char* GetDataLenthA();     // 返回正文数据长度(出去头部) 
-    DWORD       GetData(LPBYTE lpBuf, DWORD dwLenth);  // 获取http服务器返回正文  
+    DWORD       GetData(LPBYTE lpBuf, DWORD dwLenth, BOOL AutoChgUtf8 = TRUE);  // 获取http服务器返回正文  
     const char* GetSetCookieA();  
-    BOOL UnzipData(LPBYTE lpInData, DWORD InLenth, LPBYTE lpOutData, DWORD* OutLenth);  // gzip解压数据,返回真实需要的buffer大小 
+    static BOOL UnzipData(LPBYTE lpInData, DWORD InLenth, LPBYTE lpOutData, DWORD OutLenth, BOOL AutoChgUtf8);  // gzip解压数据 
 
     // WINHTTP_QUERY_ETAG   ->  ETag: "lr0ZzoawyyhskvuleG6PNUPXjzKs" 
     const char* GetETagA(); 
@@ -118,6 +120,7 @@ public:
 private:
     CURL   m_url;
     BOOL   m_IsPost;   // 是POST方式发送数据 
+    BOOL   m_AutoUnzipData;  // 是否自动解压gzip数据 
     BOOL   m_SetXmlHttpRequest;
     BOOL   m_IsRequest; // 是否已经请求过数据 ?  
 
