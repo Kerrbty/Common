@@ -1,6 +1,6 @@
 #include "HttpDownload.h"
 #include "../Http/Http.h"
-#include "../StringFormat/StringForm.h"
+#include "../StringFormat/StringFormat.h"
 #include <shlwapi.h>
 #pragma comment(lib, "shlwapi.lib")
 
