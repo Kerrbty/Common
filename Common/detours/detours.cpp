@@ -1116,9 +1116,14 @@ static DWORD detour_writable_trampoline_regions()
     // Mark all of the regions as writable.
     for (PDETOUR_REGION pRegion = s_pRegions; pRegion != NULL; pRegion = pRegion->pNext) {
         DWORD dwOld;
-        if (!VirtualProtect(pRegion, DETOUR_REGION_SIZE, PAGE_EXECUTE_READWRITE, &dwOld)) {
+        DWORD pid = GetCurrentProcessId();
+        HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
+        if (!VirtualProtectEx(hProcess, pRegion, DETOUR_REGION_SIZE, PAGE_EXECUTE_READWRITE, &dwOld)) {
             return GetLastError();
         }
+//         if (!VirtualProtect(pRegion, DETOUR_REGION_SIZE, PAGE_EXECUTE_READWRITE, &dwOld)) {
+//             return GetLastError();
+//         }
     }
     return NO_ERROR;
 }
@@ -1130,7 +1135,11 @@ static void detour_runnable_trampoline_regions()
     // Mark all of the regions as executable.
     for (PDETOUR_REGION pRegion = s_pRegions; pRegion != NULL; pRegion = pRegion->pNext) {
         DWORD dwOld;
-        VirtualProtect(pRegion, DETOUR_REGION_SIZE, PAGE_EXECUTE_READ, &dwOld);
+//         VirtualProtect(pRegion, DETOUR_REGION_SIZE, PAGE_EXECUTE_READ, &dwOld);
+        DWORD pid = GetCurrentProcessId();
+        HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
+        VirtualProtectEx(hProcess, pRegion, DETOUR_REGION_SIZE, PAGE_EXECUTE_READ, &dwOld);
+
         FlushInstructionCache(hProcess, pRegion, DETOUR_REGION_SIZE);
     }
 }
@@ -1531,8 +1540,11 @@ LONG WINAPI DetourTransactionAbort()
     for (DetourOperation *o = s_pPendingOperations; o != NULL;) {
         // We don't care if this fails, because the code is still accessible.
         DWORD dwOld;
-        VirtualProtect(o->pbTarget, o->pTrampoline->cbRestore,
-                       o->dwPerm, &dwOld);
+        DWORD pid = GetCurrentProcessId();
+        HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
+        VirtualProtectEx(hProcess, o->pbTarget, o->pTrampoline->cbRestore, o->dwPerm, &dwOld);
+//         VirtualProtect(o->pbTarget, o->pTrampoline->cbRestore,
+//                        o->dwPerm, &dwOld);
 
         if (!o->fIsRemove) {
             if (o->pTrampoline) {
@@ -1817,7 +1829,10 @@ typedef ULONG_PTR DETOURS_EIP_TYPE;
     for (o = s_pPendingOperations; o != NULL;) {
         // We don't care if this fails, because the code is still accessible.
         DWORD dwOld;
-        VirtualProtect(o->pbTarget, o->pTrampoline->cbRestore, o->dwPerm, &dwOld);
+        DWORD pid = GetCurrentProcessId();
+        HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
+        VirtualProtectEx(hProcess, o->pbTarget, o->pTrampoline->cbRestore, o->dwPerm, &dwOld);
+//         VirtualProtect(o->pbTarget, o->pTrampoline->cbRestore, o->dwPerm, &dwOld);
         FlushInstructionCache(hProcess, o->pbTarget, o->pTrampoline->cbRestore);
 
         if (o->fIsRemove && o->pTrampoline) {
@@ -2225,11 +2240,18 @@ LONG WINAPI DetourAttachEx(_Inout_ PVOID *ppPointer,
     (void)pbTrampoline;
 
     DWORD dwOld = 0;
-    if (!VirtualProtect(pbTarget, cbTarget, PAGE_EXECUTE_READWRITE, &dwOld)) {
+    DWORD pid = GetCurrentProcessId();
+    HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
+    if (!VirtualProtectEx(hProcess, pbTarget, cbTarget, PAGE_EXECUTE_READWRITE, &dwOld)) {
         error = GetLastError();
         DETOUR_BREAK();
         goto fail;
     }
+//     if (!VirtualProtect(pbTarget, cbTarget, PAGE_EXECUTE_READWRITE, &dwOld)) {
+//         error = GetLastError();
+//         DETOUR_BREAK();
+//         goto fail;
+//     }
 
     DETOUR_TRACE(("detours: pbTarget=%p: "
                   "%02x %02x %02x %02x "
@@ -2383,12 +2405,19 @@ LONG WINAPI DetourDetach(_Inout_ PVOID *ppPointer,
     }
 
     DWORD dwOld = 0;
-    if (!VirtualProtect(pbTarget, cbTarget,
-                        PAGE_EXECUTE_READWRITE, &dwOld)) {
+    DWORD pid = GetCurrentProcessId();
+    HANDLE hProcess = OpenProcess(PROCESS_ALL_ACCESS, 0, pid);
+    if (!VirtualProtectEx(hProcess, pbTarget, cbTarget, PAGE_EXECUTE_READWRITE, &dwOld)) {
         error = GetLastError();
         DETOUR_BREAK();
         goto fail;
     }
+//     if (!VirtualProtect(pbTarget, cbTarget,
+//                         PAGE_EXECUTE_READWRITE, &dwOld)) {
+//         error = GetLastError();
+//         DETOUR_BREAK();
+//         goto fail;
+//     }
 
     o->fIsRemove = TRUE;
     o->ppbPointer = (PBYTE*)ppPointer;
