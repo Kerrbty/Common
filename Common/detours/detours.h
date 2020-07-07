@@ -12,13 +12,41 @@
 #define _DETOURS_H_
 
 #ifdef _WIN64
-#define _AMD64_
+    #define _AMD64_
 #else
-#define _X86_
+    #define _X86_
 #endif
 #include <Windows.h>
 
 #define DETOURS_VERSION     0x4c0c1   // 0xMAJORcMINORcPATCH
+
+//////////////////////////////////////////////////////////////////////////////
+//
+
+#ifdef DETOURS_INTERNAL
+
+#define _CRT_STDIO_ARBITRARY_WIDE_SPECIFIERS 1
+#define _ARM_WINAPI_PARTITION_DESKTOP_SDK_AVAILABLE 1
+
+#pragma warning(disable:4068) // unknown pragma (suppress)
+
+#if _MSC_VER >= 1900
+#pragma warning(push)
+#pragma warning(disable:4091) // empty typedef
+#endif
+
+#include <windows.h>
+#if (_MSC_VER < 1310)
+#else
+#pragma warning(push)
+#if _MSC_VER > 1400
+#pragma warning(disable:6102 6103) // /analyze warnings
+#endif
+#include <strsafe.h>
+#pragma warning(pop)
+#endif
+
+#endif // DETOURS_INTERNAL
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -68,7 +96,12 @@
 //#define DETOURS_OPTION_BITS 32
 #endif
 
-#define VER_DETOURS_BITS    DETOUR_STRINGIFY(DETOURS_BITS)
+/////////////////////////////////////////////////////////////// Helper Macros.
+//
+#define DETOURS_STRINGIFY_(x)    #x
+#define DETOURS_STRINGIFY(x)    DETOURS_STRINGIFY_(x)
+
+#define VER_DETOURS_BITS    DETOURS_STRINGIFY(DETOURS_BITS)
 
 //////////////////////////////////////////////////////////////////////////////
 //
@@ -94,6 +127,7 @@ typedef ULONG ULONG_PTR;
 #undef _In_
 #undef _In_bytecount_
 #undef _In_count_
+#undef __in_ecount
 #undef _In_opt_
 #undef _In_opt_bytecount_
 #undef _In_opt_count_
@@ -148,6 +182,10 @@ typedef ULONG ULONG_PTR;
 
 #ifndef _In_count_
 #define _In_count_(x)
+#endif
+
+#ifndef __in_ecount
+#define __in_ecount(x)
 #endif
 
 #ifndef _In_opt_
@@ -440,11 +478,6 @@ typedef struct _DETOUR_EXE_HELPER
       0,\
       0,\
 }
-
-/////////////////////////////////////////////////////////////// Helper Macros.
-//
-#define DETOURS_STRINGIFY(x)    DETOURS_STRINGIFY_(x)
-#define DETOURS_STRINGIFY_(x)    #x
 
 ///////////////////////////////////////////////////////////// Binary Typedefs.
 //
