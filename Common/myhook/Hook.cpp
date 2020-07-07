@@ -16,51 +16,51 @@ CRITICAL_SECTION  CriticalSection;
 // ·Ö·¢º¯Êý
 LPVOID WINAPI GetNewAddress(PVOID MyAddr)
 {
-	LPBYTE MyFunAddr = (LPBYTE)MyAddr;
-	LPBYTE retaddr = NULL;
-	if (NowFunNum == 0)
-	{
-		return NULL;
-	}
+    LPBYTE MyFunAddr = (LPBYTE)MyAddr;
+    LPBYTE retaddr = NULL;
+    if (NowFunNum == 0)
+    {
+        return NULL;
+    }
 
-	EnterCriticalSection(&CriticalSection);
-	for (DWORD i=0; i<NowFunNum; i++)
-	{
-		if (Function[i].MyFunAddr == MyFunAddr)
-		{
-			retaddr = Function[i].NewMalloc;
-		}
-	}
-	LeaveCriticalSection(&CriticalSection);
+    EnterCriticalSection(&CriticalSection);
+    for (DWORD i=0; i<NowFunNum; i++)
+    {
+        if (Function[i].MyFunAddr == MyFunAddr)
+        {
+            retaddr = Function[i].NewMalloc;
+        }
+    }
+    LeaveCriticalSection(&CriticalSection);
 
-	return retaddr;
+    return retaddr;
 }
 
 int64 make_int64(unsigned char* buf, int lenth)  
 {  
     int i = 0;
-    int64 ui=0;  
-    if (lenth > 8 || lenth < 1)  
-    {  
-        return (int64)0;  
-    }  
+    int64 ui=0;
+    if (lenth > 8 || lenth < 1)
+    {
+        return (int64)0;
+    }
 
-    for (i=0; i<lenth; i++)  
-    {  
-        ui = (buf[i]<<8*i)|ui;  
-    }  
+    for (i=0; i<lenth; i++)
+    {
+        ui = (buf[i]<<8*i)|ui;
+    }
 
-    // ÅÐ¶Ï·ûºÅÎ»,Îª¸ºÔòÐè¼õÈ¡·´  
-    if (buf[lenth-1] >= 0x80)  
-    {  
-        int64 xorval = 0;  
-        for (i=0; i<lenth; i++)  
-        {  
-            xorval = xorval|(0xFF<<8*i);  
-        }  
-        ui = -((ui - 1)^xorval);  
-    }  
-    return ui;  
+    // ÅÐ¶Ï·ûºÅÎ»,Îª¸ºÔòÐè¼õÈ¡·´ 
+    if (buf[lenth-1] >= 0x80)
+    {
+        int64 xorval = 0;
+        for (i=0; i<lenth; i++)
+        {
+            xorval = xorval|(0xFF<<8*i);
+        }
+        ui = -((ui - 1)^xorval);
+    }
+    return ui;
 }  
 
 // Ìø¹ý FF25 xxxxxxxx ÉîÈëÄÚ²¿hook£¬»òÕßÕâÀï¿ÉÒÔÌí¼Ó E9 xxxxxxxx ÉîÈëÄÚ²¿µÄ hook
@@ -94,11 +94,15 @@ LPVOID GetRealProcAddress(LPVOID FuncAddr)
 
 
 // hook¿½±´³öÀ´ÓÐÐ©´úÂëÊÇÌø×ª´úÂë£¬ÐèÒª¿´Çé¿öÐÞÕý 
-void ResetOffset(LPVOID ProcAddress /*Ô´´úÂëµØÖ·*/, PBYTE CopyCodeAddr /*¿½±´³öÀ´µÄÊý¾Ý*/, DWORD len /*¿½±´³¤¶È*/)
+void ResetOffset(
+                 LPVOID ProcAddress /* Ô´´úÂëµØÖ· */,
+                 PBYTE CopyCodeAddr /* ¿½±´³öÀ´µÄÊý¾Ý */,
+                 DWORD len /* ¿½±´³¤¶È */ 
+                 )
 {
-    // "\xE9\x02\x00\x00\x00\xEB\xF9"
-    // HotPatch
-    // detours Èç¹ûÓÐÈÈ²¹¶¡µÄÇé¿öÏÂ£¬»áhook hotpatch µÄ´úÂë
+    // "\xE9\x02\x00\x00\x00\xEB\xF9" 
+    // HotPatch 
+    // detours Èç¹ûÓÐÈÈ²¹¶¡µÄÇé¿öÏÂ£¬»áhook hotpatch µÄ´úÂë 
     SIZE_T dwBytes;
     LPBYTE bFunc = (LPBYTE)ProcAddress;
     if (memcmp(CopyCodeAddr, "\xEB\xF9", 2) == 0 )
@@ -108,6 +112,7 @@ void ResetOffset(LPVOID ProcAddress /*Ô´´úÂëµØÖ·*/, PBYTE CopyCodeAddr /*¿½±´³öÀ
             LPBYTE relAddr = bFunc+make_int64(bFunc-4, 4);
             if (relAddr >= bFunc +2 && relAddr < bFunc+len)
             {
+                // ÕâÀïÔÚx64ÖÐ²»Ò»¶¨ÄÜ³ÉÁ¢£¬ÒòÎª´óÓÚÇ°ºó2GµÄµØÖ·ÊÇÎÞ·¨Ö±½ÓÌø×ªµÄ 
                 DWORD writevalue = (DWORD)CopyCodeAddr+(relAddr-bFunc)+3;
                 writevalue = writevalue - (DWORD)bFunc;
                 WriteProcessMemory(GetCurrentProcess(), bFunc-4, &writevalue, 4, &dwBytes);
@@ -197,12 +202,12 @@ void ResetOffset(LPVOID ProcAddress /*Ô´´úÂëµØÖ·*/, PBYTE CopyCodeAddr /*¿½±´³öÀ
 // hookÖ¸¶¨µÄµØÖ·£¨±ØÐëÖªµÀÕâ¸öº¯ÊýµÄ²ÎÊý¸öÊý£¬ÇÒ±ØÐëÊÇ __stdcall µ÷ÓÃ·½Ê½£©
 BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr)
 {
-	static BOOL initval = FALSE;
-	if (!initval)
-	{
-		initval = TRUE;
-		InitializeCriticalSection(&CriticalSection);
-	}
+    static BOOL initval = FALSE;
+    if (!initval)
+    {
+        initval = TRUE;
+        InitializeCriticalSection(&CriticalSection);
+    }
     if (ProcAddress == NULL || MyProcAddr == NULL)
     {
         return FALSE;
@@ -218,11 +223,11 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
         }
     }
 
-	BYTE TMP[20] = {0};
-	DWORD OldProtect;
-	BYTE retbuf[] = "\x68\x00\x00\x00\x00\xC3"; // push address , retn
+    BYTE TMP[20] = {0};
+    DWORD OldProtect;
+    BYTE retbuf[] = "\x68\x00\x00\x00\x00\xC3"; // push address , retn
 
-	memset(TMP, 0x90, 20);
+    memset(TMP, 0x90, 20);
 
 #ifdef _USE_JMP_
     const int iHookNeedLen = 5;
@@ -233,102 +238,102 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
     DWORD NewAddress = (DWORD)MyProcAddr - (DWORD)RealProcAddress - 5; 
     *(DWORD*)(TMP+1) = NewAddress;
 #else
-    // ¶ÔÓ¦»áÖØÔØdllµÄ¿ÇÀ´Ëµ£¬²»ÄÜÓÃjmp (±ãÒËµØÖ·»á±ä) 
+    // ¶ÔÓ¦»áÖØÔØdllµÄ¿ÇÀ´Ëµ£¬²»ÄÜÓÃjmp (Æ«ÒÆµØÖ·»á±ä) 
     const int iHookNeedLen = 6;
     TMP[0]= (BYTE)0x68;
     *(DWORD*)(TMP+1) = (DWORD)MyProcAddr;
     TMP[5] = (BYTE)0xC3 ;
 #endif
-	
-	DWORD len = 0;
-	while(len < iHookNeedLen)
-	{
-		DWORD i = LDE((unsigned char *)RealProcAddress, 0);
-		len += i;
-		RealProcAddress = (PVOID)((DWORD)RealProcAddress + i);
-	}
-	RealProcAddress = (PVOID)((DWORD)RealProcAddress - len);
+    
+    DWORD len = 0;
+    while(len < iHookNeedLen)
+    {
+        DWORD i = LDE((unsigned char *)RealProcAddress, 0);
+        len += i;
+        RealProcAddress = (PVOID)((DWORD)RealProcAddress + i);
+    }
+    RealProcAddress = (PVOID)((DWORD)RealProcAddress - len);
 
-	*(DWORD*)(retbuf+1) = (DWORD)RealProcAddress + len;
+    *(DWORD*)(retbuf+1) = (DWORD)RealProcAddress + len;
 
-	// ÕæÕýÊ¹ÓÃµÄ´óÐ¡ len + sizeof(retbuf) - 1
-	BYTE* ProcJmp = (BYTE*)AllocMemory(len + ALLOC_JMP_Size + sizeof(retbuf)); 
-	if (ProcJmp == NULL)
-	{
-		// ÉêÇëÄÚ´æÊ§°Ü
-		return FALSE;
-	}
-	memset(ProcJmp, 0x90, len+ALLOC_JMP_Size+sizeof(retbuf));
+    // ÕæÕýÊ¹ÓÃµÄ´óÐ¡ len + sizeof(retbuf) - 1
+    BYTE* ProcJmp = (BYTE*)AllocMemory(len + ALLOC_JMP_Size + sizeof(retbuf)); 
+    if (ProcJmp == NULL)
+    {
+        // ÉêÇëÄÚ´æÊ§°Ü
+        return FALSE;
+    }
+    memset(ProcJmp, 0x90, len+ALLOC_JMP_Size+sizeof(retbuf));
 
-	// ±»Ìæ»»µÄÊ×²¿Ö¸Áî
-	if ( VirtualProtect(ProcJmp, len+ALLOC_JMP_Size+sizeof(retbuf), PAGE_EXECUTE_READWRITE, &OldProtect) )
-	{
-		memcpy(ProcJmp, RealProcAddress, len);
-		memcpy(ProcJmp+ALLOC_JMP_Size+len, retbuf, sizeof(retbuf));
-//		VirtualProtect(ProcJmp, len+sizeof(retbuf), OldProtect, &OldProtect);
-	}
-	else
-	{
-		return FALSE;
-	}
+    // ±»Ìæ»»µÄÊ×²¿Ö¸Áî
+    if ( VirtualProtect(ProcJmp, len+ALLOC_JMP_Size+sizeof(retbuf), PAGE_EXECUTE_READWRITE, &OldProtect) )
+    {
+        memcpy(ProcJmp, RealProcAddress, len);
+        memcpy(ProcJmp+ALLOC_JMP_Size+len, retbuf, sizeof(retbuf));
+//        VirtualProtect(ProcJmp, len+sizeof(retbuf), OldProtect, &OldProtect);
+    }
+    else
+    {
+        return FALSE;
+    }
 
-	// ±£´æÔ­º¯Êý¡ª¡ª×Ô¼º´¦Àíº¯Êý
-	EnterCriticalSection(&CriticalSection);
+    // ±£´æÔ­º¯Êý¡ª¡ª×Ô¼º´¦Àíº¯Êý
+    EnterCriticalSection(&CriticalSection);
     Function[NowFunNum].HookedFunAddr = (LPBYTE)RealProcAddress;
-	Function[NowFunNum].MyFunAddr = (LPBYTE)MyProcAddr;
-	Function[NowFunNum].NewMalloc = (LPBYTE)ProcJmp;
-	Function[NowFunNum].srclen = len;
-	Function[NowFunNum].srcByte = (LPBYTE)AllocMemory(len);
-	memcpy(Function[NowFunNum].srcByte, RealProcAddress, len);
-	NowFunNum++ ;
-	LeaveCriticalSection(&CriticalSection);
+    Function[NowFunNum].MyFunAddr = (LPBYTE)MyProcAddr;
+    Function[NowFunNum].NewMalloc = (LPBYTE)ProcJmp;
+    Function[NowFunNum].srclen = len;
+    Function[NowFunNum].srcByte = (LPBYTE)AllocMemory(len);
+    memcpy(Function[NowFunNum].srcByte, RealProcAddress, len);
+    NowFunNum++ ;
+    LeaveCriticalSection(&CriticalSection);
 
     if (NewStubAddr != NULL)
     {
         *NewStubAddr = (LPBYTE)ProcJmp;
     }
 
-	// ÐÞ¸ÄÒ»Ð©Æ«ÒÆ
-	ResetOffset(RealProcAddress, ProcJmp, len);
+    // ÐÞ¸ÄÒ»Ð©Æ«ÒÆ
+    ResetOffset(RealProcAddress, ProcJmp, len);
 
-	// Inline Hook
-	if( VirtualProtect(RealProcAddress, len, PAGE_EXECUTE_READWRITE, &OldProtect) )
-	{
-		memcpy(RealProcAddress, TMP, len); // Ð´ÈëjmpÖ¸Áî
-		VirtualProtect(RealProcAddress, len, OldProtect, &OldProtect);
-	}
-	
-	////////////////////////////////////////////////////////////
-	return TRUE;
+    // Inline Hook
+    if( VirtualProtect(RealProcAddress, len, PAGE_EXECUTE_READWRITE, &OldProtect) )
+    {
+        memcpy(RealProcAddress, TMP, len); // Ð´ÈëjmpÖ¸Áî
+        VirtualProtect(RealProcAddress, len, OldProtect, &OldProtect);
+    }
+    
+    ////////////////////////////////////////////////////////////
+    return TRUE;
 }
 
 // ½øÐÐhook
 BOOL HookProcByName(LPCTSTR DllName, LPCSTR ProcName, PVOID MyProcAddr)
 {
-	HMODULE Dll = GetModuleHandle(DllName);
-	if (Dll == NULL)
-	{
-		Dll = LoadLibrary(DllName);
-	}
-	if (Dll == NULL)
-	{
-		return FALSE;
-	}
-	
-	PVOID ProcAddress = (PVOID)GetProcAddress(Dll, ProcName);
-	if (ProcAddress == NULL)
-	{
-		FreeLibrary(Dll);
-		return FALSE;
-	}
-	return HookProcByAddress(ProcAddress, MyProcAddr);
+    HMODULE Dll = GetModuleHandle(DllName);
+    if (Dll == NULL)
+    {
+        Dll = LoadLibrary(DllName);
+    }
+    if (Dll == NULL)
+    {
+        return FALSE;
+    }
+    
+    PVOID ProcAddress = (PVOID)GetProcAddress(Dll, ProcName);
+    if (ProcAddress == NULL)
+    {
+        FreeLibrary(Dll);
+        return FALSE;
+    }
+    return HookProcByAddress(ProcAddress, MyProcAddr);
 }
 
 // ×¢Òâ£¬´Ëº¯Êý¿ÉÒÔÖØ¸´hook 
 BOOL HookProc(LPVOID addr, LPVOID MyProcAddr)
 {
     LPVOID ProcAddress = *(PBYTE*)addr;
-	return HookProcByAddress(ProcAddress, MyProcAddr, (LPVOID *)addr);
+    return HookProcByAddress(ProcAddress, MyProcAddr, (LPVOID *)addr);
 }
 
 
@@ -384,56 +389,56 @@ BOOL UnHookProc(LPVOID addr, LPVOID MyProcAddr)
 
 BOOL UnHookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr)
 {
-	DWORD OldProtect;
-	if (NowFunNum == 0)
-	{
-		return FALSE;
-	}
+    DWORD OldProtect;
+    if (NowFunNum == 0)
+    {
+        return FALSE;
+    }
 
     LPBYTE lpRealProcAddress = (LPBYTE)GetRealProcAddress(ProcAddress);
-	EnterCriticalSection(&CriticalSection);
-	for (DWORD i=0; i<NowFunNum; i++)
-	{
-		if (Function[i].HookedFunAddr == (LPBYTE)lpRealProcAddress)
-		{
-			if ( VirtualProtect(Function[i].HookedFunAddr, Function[i].srclen, PAGE_EXECUTE_READWRITE, &OldProtect) )
-			{
-				memcpy(Function[i].HookedFunAddr, Function[i].srcByte, Function[i].srclen);
-				VirtualProtect(Function[i].HookedFunAddr, Function[i].srclen, OldProtect, &OldProtect);
-				FreeMemory(Function[i].srcByte);
-				NowFunNum--;
-				while (i<NowFunNum)
-				{
-					memcpy(Function+i, Function+i+1, sizeof(*Function));
-					i++;
-				}
-			}
-		}
-	}
-	LeaveCriticalSection(&CriticalSection);
+    EnterCriticalSection(&CriticalSection);
+    for (DWORD i=0; i<NowFunNum; i++)
+    {
+        if (Function[i].HookedFunAddr == (LPBYTE)lpRealProcAddress)
+        {
+            if ( VirtualProtect(Function[i].HookedFunAddr, Function[i].srclen, PAGE_EXECUTE_READWRITE, &OldProtect) )
+            {
+                memcpy(Function[i].HookedFunAddr, Function[i].srcByte, Function[i].srclen);
+                VirtualProtect(Function[i].HookedFunAddr, Function[i].srclen, OldProtect, &OldProtect);
+                FreeMemory(Function[i].srcByte);
+                NowFunNum--;
+                while (i<NowFunNum)
+                {
+                    memcpy(Function+i, Function+i+1, sizeof(*Function));
+                    i++;
+                }
+            }
+        }
+    }
+    LeaveCriticalSection(&CriticalSection);
 
-	return TRUE;
+    return TRUE;
 }
 
 
 // ½øÐÐunhook
 BOOL UnHookProcByName(LPCTSTR DllName, LPCSTR ProcName, PVOID MyProcAddr)
-{	
-	HMODULE Dll = GetModuleHandle(DllName);
-	if (Dll == NULL)
-	{
-		Dll = LoadLibrary(DllName);
-	}
-	if (Dll == NULL)
-	{
-		return FALSE;
-	}
+{    
+    HMODULE Dll = GetModuleHandle(DllName);
+    if (Dll == NULL)
+    {
+        Dll = LoadLibrary(DllName);
+    }
+    if (Dll == NULL)
+    {
+        return FALSE;
+    }
 
-	PVOID ProcAddress = (PVOID)GetProcAddress(Dll, ProcName);
-	if (ProcAddress == NULL)
-	{
-		FreeLibrary(Dll);
-		return FALSE;
-	}
-	return UnHookProcByAddress(ProcAddress, MyProcAddr);
+    PVOID ProcAddress = (PVOID)GetProcAddress(Dll, ProcName);
+    if (ProcAddress == NULL)
+    {
+        FreeLibrary(Dll);
+        return FALSE;
+    }
+    return UnHookProcByAddress(ProcAddress, MyProcAddr);
 }

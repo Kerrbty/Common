@@ -12,7 +12,7 @@
 #define _DETOURS_H_
 
 #ifdef _WIN64
-#define _ARM64_
+#define _AMD64_
 #else
 #define _X86_
 #endif

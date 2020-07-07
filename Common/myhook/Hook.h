@@ -26,10 +26,10 @@ LPVOID WINAPI GetNewAddress(PVOID MyAddr); // 得到原来函数的地址并返回
 typedef struct _FunAddress 
 {
     LPBYTE HookedFunAddr; // 被hook函数地址
-	LPBYTE MyFunAddr;   // 处理hook函数地址
-	LPBYTE NewMalloc;   // 新的转接Stub代码地址
-	LPBYTE srcByte;     // 原始数据
-	DWORD srclen;      // 原始数据长度
+    LPBYTE MyFunAddr;   // 处理hook函数地址
+    LPBYTE NewMalloc;   // 新的转接Stub代码地址
+    LPBYTE srcByte;     // 原始数据
+    DWORD srclen;      // 原始数据长度
 }FunAddress, *PFunAddress;
 
 
