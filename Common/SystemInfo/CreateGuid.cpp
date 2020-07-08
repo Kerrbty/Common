@@ -3,7 +3,7 @@
 #include "SystemInfo.h"
 #include "../Http/HttpPost.h"
 
-char* CreateNewClientGuid(char* pbuf, DWORD dwSize)
+static char* WINAPI CreateNewClientGuid(char* pbuf, DWORD dwSize)
 {
 
     if (pbuf == NULL || dwSize <= 39)
@@ -91,7 +91,7 @@ char* CreateNewClientGuid(char* pbuf, DWORD dwSize)
 }
 
 
-char* GetClientGuid(char* pbuf, DWORD dwSize)
+char* WINAPI GetClientGuid(char* pbuf, DWORD dwSize)
 {
     HKEY hKey;
     // ²éÑ¯×¢²á±í
@@ -116,7 +116,7 @@ char* GetClientGuid(char* pbuf, DWORD dwSize)
     return CreateNewClientGuid(pbuf, dwSize);
 }
 
-bool WriteGuid(char* curver, char* szguid)
+bool WINAPI WriteGuid(char* curver, char* szguid)
 {
     if (szguid != NULL)
     {

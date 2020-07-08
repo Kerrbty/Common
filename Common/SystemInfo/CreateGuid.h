@@ -4,8 +4,8 @@
 
 
 // 获取一个系统唯一标识符
-char* GetClientGuid(char* pbuf, DWORD dwSize);
+char* WINAPI GetClientGuid(char* pbuf, DWORD dwSize);
 
 // 保存当前guid
-bool WriteGuid(char* curver, char* szguid);
+bool WINAPI WriteGuid(char* curver, char* szguid);
 
