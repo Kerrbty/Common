@@ -1,7 +1,7 @@
 #ifndef _HTTP_CONFIG_HEADER_201904141545_H_
 #define _HTTP_CONFIG_HEADER_201904141545_H_
 #include <Windows.h>
-// #define USE_WINHTTP
+#define USE_WINHTTP
 
 
 
