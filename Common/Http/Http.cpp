@@ -122,7 +122,7 @@ HINTERNET OpenRequest(HINTERNET hConnect, LPCWSTR verb, LPCWSTR objcetName, int 
     {
         flags |= INTERNET_FLAG_SECURE;
     }
-    return HttpOpenRequestW(hConnect, verb, objcetName, NULL, NULL, NULL, flags, 0);
+    return HttpOpenRequestW(hConnect, verb, objcetName, L"HTTP/1.1", NULL, NULL, flags, 0);
 #endif
 }
 

@@ -6,11 +6,11 @@
 
 
 #ifdef USE_WINHTTP 
-// xp
+// xp sp3
 #include <winhttp.h>
 #pragma comment(lib, "winhttp.lib")
 #else // USE_WINHTTP 
-// xp sp3
+// xp
 #include <WinInet.h>
 #pragma comment(lib, "wininet.lib")
 #endif // USE_WINHTTP 

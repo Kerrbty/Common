@@ -122,7 +122,6 @@ VOID CURL::AnalyzeUrl(LPWSTR szurl)
 
     if (objname != NULL)
     {
-        objname++;
         if (*objname != L'\0')
         {
             DWORD dwObjLen = wcslen(objname);
