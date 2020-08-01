@@ -1,5 +1,6 @@
-#include "Http.h"
 #include "Config.h"
+#include <defs.h>
+#include "Http.h"
 #include "AnalyzeURL.h"
 #include "../StringFormat/StringFormat.h"
 #include <stdlib.h>
@@ -237,22 +238,23 @@ VOID CloseInternetHandle(HINTERNET hInternet)
 //////////////////////////////////////////////////////////////////////////
 
 // …Ë÷√≤Œ ˝ 
-#define SetFuncBody(_name, _value)  BOOL CHttp::##_name##A(LPCSTR szTmp) \
+#define SetFuncBody(_name, _value)  BOOL CHttp::_name##A(LPCSTR szTmp) \
 {\
     BOOL retval = FALSE; \
     if(szTmp != NULL) {\
-    LPWSTR szwTmp = MulToWide(szTmp); \
-    retval = ##_name##W(szwTmp); \
-    FreeString(szwTmp); \
+        LPWSTR szwTmp = MulToWide(szTmp); \
+        retval = _name##W(szwTmp); \
+        FreeString(szwTmp); \
     } \
     return retval; \
 } \
-    BOOL CHttp::##_name##W(LPCWSTR szwTmp) \
+    BOOL CHttp::_name##W(LPCWSTR szwTmp) \
 {\
     if (szwTmp == NULL) return FALSE; \
-    if (_value) FreeString(_value); \
-    _value = (LPWSTR)AllocMemory((wcslen(szwTmp)+1)*sizeof(WCHAR)); \
-    wcscpy(_value, szwTmp); \
+    if (_value) FreeMemory(_value); {\
+        _value = (LPWSTR)AllocMemory((wcslen(szwTmp)+1)*sizeof(WCHAR)); \
+        wcscpy(_value, szwTmp); \
+    } \
     if (_value) return TRUE; \
     return FALSE; \
 }

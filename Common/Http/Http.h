@@ -2,12 +2,10 @@
 #define _CHTTP_ZXLY_2019_HEADER_HH_H
 #include <Windows.h>
 #include "AnalyzeURL.h"
-// #define USE_WINHTTP
-typedef void *HINTERNET;
 
+typedef void *HINTERNET;
 // 返回传送的dwSize大小，如果不等则退出接收环节 
 typedef unsigned long (WINAPI* PGetData)(unsigned char* lpBuf, unsigned long dwSize, void* userdata);
-
 
 class CHttp
 {
@@ -73,6 +71,7 @@ public:
     BOOL SetPostData(LPBYTE lpBuf, DWORD dwSize);
 
     void SetGetDataFunc(PGetData func, void* userdata);
+
 public:
     // 查询设置信息 
     const char* QueryCookieA();
@@ -85,6 +84,7 @@ public:
     const WCHAR* QueryUserAgentW();
 
     BOOL  IsPost();
+
 public:
     unsigned long long LoopToGetData(); // 循环获取数据，知道用户返回不一致或者读取网络数据完毕 
 
@@ -147,14 +147,6 @@ private:
     char*  m_szurl;
     char*  m_tmp_string;  // 给用户返回的临时数据 
     LPWSTR m_tmp_header;
-    
 };
-
-
-
-
-
-
-
 
 #endif // _CHTTP_ZXLY_2019_HEADER_HH_H

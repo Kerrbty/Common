@@ -1,42 +1,44 @@
 #include "StringFormat.h"
+#include <crtdbg.h>
 
 // UTF8 转 窄字节
 PSTR UTF8ToANSI( INOUT PSTR str , IN size_t size)
 {
-	LPWSTR  pElementText;
-	int    iTextLen;
-	// wide char to multi char
-	iTextLen = MultiByteToWideChar( CP_UTF8,
-		0,
-		str,
-		-1,
-		NULL,
-		0 );
-	
-	pElementText = (LPWSTR)AllocMemory((iTextLen + 1)*sizeof(WCHAR));
+    LPWSTR  pElementText;
+    int    iTextLen;
+    // wide char to multi char
+    iTextLen = MultiByteToWideChar( CP_UTF8,
+        0,
+        str,
+        -1,
+        NULL,
+        0 );
+    
+    pElementText = (LPWSTR)AllocMemory((iTextLen + 1)*sizeof(WCHAR));
+    _ASSERT(pElementText);
     if (pElementText == NULL)
     {
         return NULL;
     }
-	MultiByteToWideChar( CP_UTF8,
-		0,
-		str,
-		-1,
-		pElementText,
-		iTextLen );
-	
+    MultiByteToWideChar( CP_UTF8,
+        0,
+        str,
+        -1,
+        pElementText,
+        iTextLen );
+    
     memset(str, 0, size);
-	WideCharToMultiByte( CP_ACP,
-		0,
-		pElementText,
-		-1,
-		(PCHAR)str,
-		size,
-		NULL,
-		NULL );
+    WideCharToMultiByte( CP_ACP,
+        0,
+        pElementText,
+        -1,
+        (PCHAR)str,
+        size,
+        NULL,
+        NULL );
 
-	FreeMemory(pElementText);
-	return str;
+    FreeMemory(pElementText);
+    return str;
 }
 
 PSTR ANSIToUTF8( INOUT PSTR str , IN size_t size)
@@ -52,6 +54,7 @@ PSTR ANSIToUTF8( INOUT PSTR str , IN size_t size)
         0 );
 
     pElementText = (LPWSTR)AllocMemory((iTextLen + 1)*sizeof(WCHAR));
+    _ASSERT(pElementText);
     if (pElementText == NULL)
     {
         return NULL;
@@ -81,56 +84,62 @@ PSTR ANSIToUTF8( INOUT PSTR str , IN size_t size)
 // 多字节转宽字节，内存需要自行释放
 PWSTR MulToWide( LPCSTR str )
 {
-	PWSTR  pElementText;
-	int    iTextLen;
+    PWSTR  pElementText;
+    int    iTextLen;
 
-	iTextLen = MultiByteToWideChar( CP_ACP,
-		0,
-		(PCHAR)str,
-		-1,
-		NULL,
-		0 );
-	
-	pElementText = 
-		(PWSTR)AllocMemory((iTextLen+1)*sizeof(WCHAR));
+    iTextLen = MultiByteToWideChar( CP_ACP,
+        0,
+        (PCHAR)str,
+        -1,
+        NULL,
+        0 );
+    
+    pElementText = 
+        (PWSTR)AllocMemory((iTextLen+1)*sizeof(WCHAR));
+    _ASSERT(pElementText);
+    if (pElementText)
+    {
+        MultiByteToWideChar( CP_ACP,
+            0,
+            (PCHAR)str,
+            -1,
+            pElementText,
+            iTextLen );
+    }
 
-	MultiByteToWideChar( CP_ACP,
-		0,
-		(PCHAR)str,
-		-1,
-		pElementText,
-		iTextLen );
-
-	return pElementText;
+    return pElementText;
 }
 
 PSTR WideToMul( LPCWSTR str )
 {
-	PSTR  pElementText;
-	int    iTextLen;
-	
-	iTextLen = WideCharToMultiByte( CP_ACP,
-		0,
-		str,
-		-1,
-		NULL,
-		0,
-		NULL,
-		NULL);
-	
-	pElementText = 
-		(PSTR)AllocMemory( iTextLen+1 );
-	
-	WideCharToMultiByte( CP_ACP,
-		0,
-		str,
-		-1,
-		pElementText,
-		iTextLen,
-		NULL,
-		NULL);
-	
-	return pElementText;
+    PSTR  pElementText;
+    int    iTextLen;
+    
+    iTextLen = WideCharToMultiByte( CP_ACP,
+        0,
+        str,
+        -1,
+        NULL,
+        0,
+        NULL,
+        NULL);
+    
+    pElementText = 
+        (PSTR)AllocMemory( iTextLen+1 );
+    _ASSERT(pElementText);
+    if (pElementText)
+    {
+        WideCharToMultiByte( CP_ACP,
+            0,
+            str,
+            -1,
+            pElementText,
+            iTextLen,
+            NULL,
+            NULL);
+    }
+
+    return pElementText;
 }
 
 //////////////////////////////////////////////////////////////////////////
@@ -181,31 +190,31 @@ void CMultiAndWide::SetString(PCWSTR wzStr)
 // 查找字符串中给定字符最后出现的位置
 LPSTR FindLasteSymbolA(LPSTR CommandLine, CHAR FindWchar)
 {
-	int Len;
-	for ( Len = strlen(CommandLine) ; Len>0; Len-- )
-	{
-		if (CommandLine[Len] == FindWchar)
-		{
-			Len++;
-			break;
-		}
-	}
-	return &CommandLine[Len];
+    int Len;
+    for ( Len = strlen(CommandLine) ; Len>0; Len-- )
+    {
+        if (CommandLine[Len] == FindWchar)
+        {
+            Len++;
+            break;
+        }
+    }
+    return &CommandLine[Len];
 }
 
 // 查找字符串中给定字符最后出现的位置
 LPWSTR FindLasteSymbolW(LPWSTR CommandLine, WCHAR FindWchar)
 {
-	int Len;
-	for ( Len = wcslen(CommandLine) ; Len>0; Len-- )
-	{
-		if (CommandLine[Len] == FindWchar)
-		{
-			Len++;
-			break;
-		}
-	}
-	return &CommandLine[Len];
+    int Len;
+    for ( Len = wcslen(CommandLine) ; Len>0; Len-- )
+    {
+        if (CommandLine[Len] == FindWchar)
+        {
+            Len++;
+            break;
+        }
+    }
+    return &CommandLine[Len];
 }
 
 
