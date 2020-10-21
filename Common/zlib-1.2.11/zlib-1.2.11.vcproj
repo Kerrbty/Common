@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="zlib"
+	Name="zlib-1.2.11"
 	ProjectGUID="{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}"
-	RootNamespace="zlib"
+	RootNamespace="zlib-1.2.11"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>

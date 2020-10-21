@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <windows.h>
 #include <tchar.h>
-#include "StringForm.h"
+#include "StringFormat/StringFormat.h"
 #include "disasm.h"
 #include "AnalyzeSymbol.h"
 

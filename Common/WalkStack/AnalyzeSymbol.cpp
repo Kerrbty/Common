@@ -1,6 +1,6 @@
 #include "AnalyzeSymbol.h"
 #include "dbghelp.h"
-#include "StringForm.h"
+#include "StringFormat/StringFormat.h"
 
 #pragma comment(lib, "Imagehlp.lib")
 LPTSTR GetFuncNameByDllName(  LPSTR DllName, 

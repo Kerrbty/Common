@@ -37,7 +37,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "PV", "PV\PV.vcproj", "{7754
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "detours", "detours\detours.vcproj", "{66AB65A3-DAE6-4A7F-9BF9-903F4D6C39A7}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib", "zlib\zlib.vcproj", "{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "zlib-1.2.11", "zlib-1.2.11\zlib-1.2.11.vcproj", "{41C4D4E7-53D4-4CAE-AB03-95E5637A3334}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wow64ext", "wow64ext\wow64ext.vcproj", "{3F2CAE64-A6E1-44B4-8668-C8C0460F5CE4}"
 EndProject
