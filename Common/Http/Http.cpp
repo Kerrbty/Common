@@ -5,7 +5,7 @@
 #include "../StringFormat/StringFormat.h"
 #include <stdlib.h>
 #include <stdio.h>
-#include <zlib/zlib.h>
+#include <zlib-1.2.11/zlib.h>
 
 #ifdef _DEBUG
 #pragma comment(lib, "zlib_d.lib")
