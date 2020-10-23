@@ -1,3 +1,4 @@
+#define _EXPORT_COMMON_CODE_
 #include "Hook.h"
 #define LOWBYTE 0x000000FF
 #define AllocMemory(_a)  HeapAlloc(GetProcessHeap(), HEAP_ZERO_MEMORY, _a)
@@ -12,6 +13,23 @@ FunAddress Function[MAX_HOOK_NUM] = {0};
 DWORD NowFunNum = 0;
 CRITICAL_SECTION  CriticalSection;
 
+#pragma pack(push, 1)
+typedef struct _jmpCode{
+    unsigned char operator_code;
+    DWORD address;
+}jmpCode, *pjmpCode;
+
+typedef struct _pushretCode{
+    unsigned char operator_code;
+    DWORD address;
+    unsigned char ret_code;
+}pushretCode, *ppushretCode;
+
+typedef struct _stubCode{
+    jmpCode jmp_code;
+    unsigned char other_code[15];
+}stubCode, *pstubCode;
+#pragma pack(pop)
 
 // 分发函数
 LPVOID WINAPI GetNewAddress(PVOID MyAddr)
@@ -215,7 +233,7 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
 
     // 跳过一些非必要代码，深入内部，也可以hook已hook函数，直到核心 
     LPVOID RealProcAddress = GetRealProcAddress(ProcAddress);
-    for (int i=0; i<NowFunNum; i++)
+    for (DWORD i=0; i<NowFunNum; i++)
     {
         if( Function[i].HookedFunAddr == (LPVOID)RealProcAddress )  // 对于jmp 好像没什么用，因为会继续深入到跳转目标，尴尬 
         {
@@ -223,26 +241,27 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
         }
     }
 
-    BYTE TMP[20] = {0};
+    stubCode TMPCode = {0};
     DWORD OldProtect;
-    BYTE retbuf[] = "\x68\x00\x00\x00\x00\xC3"; // push address , retn
+    pushretCode retbuf = {0};
+    retbuf.operator_code = 0x68; // push 
+    retbuf.ret_code = 0xC3; // retn 
 
-    memset(TMP, 0x90, 20);
+    memset(&TMPCode, 0x90, sizeof(stubCode));
 
 #ifdef _USE_JMP_
     const int iHookNeedLen = 5;
-    TMP[0]=(BYTE)0xE9;
+    TMPCode.jmp_code.operator_code = 0xE9;
 
     ////////////////////////////////////////////////////////////
     // 偏移地址 = 我们函数的地址 - 原API函数的地址 - 5（我们这条指令的长度）
-    DWORD NewAddress = (DWORD)MyProcAddr - (DWORD)RealProcAddress - 5; 
-    *(DWORD*)(TMP+1) = NewAddress;
+    TMPCode.jmp_code.address = (DWORD)MyProcAddr - (DWORD)RealProcAddress - 5; 
 #else
     // 对应会重载dll的壳来说，不能用jmp (偏移地址会变) 
     const int iHookNeedLen = 6;
-    TMP[0]= (BYTE)0x68;
-    *(DWORD*)(TMP+1) = (DWORD)MyProcAddr;
-    TMP[5] = (BYTE)0xC3 ;
+    TMPCode.jmp_code.operator_code = 0x68;  // push 
+    TMPCode.jmp_code.address = (DWORD)MyProcAddr;
+    TMPCode.other_code[0] = 0xC3 ;  // retn 
 #endif
     
     DWORD len = 0;
@@ -254,7 +273,7 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
     }
     RealProcAddress = (PVOID)((DWORD)RealProcAddress - len);
 
-    *(DWORD*)(retbuf+1) = (DWORD)RealProcAddress + len;
+    retbuf.address = (DWORD)RealProcAddress + len;
 
     // 真正使用的大小 len + sizeof(retbuf) - 1
     BYTE* ProcJmp = (BYTE*)AllocMemory(len + ALLOC_JMP_Size + sizeof(retbuf)); 
@@ -269,7 +288,7 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
     if ( VirtualProtect(ProcJmp, len+ALLOC_JMP_Size+sizeof(retbuf), PAGE_EXECUTE_READWRITE, &OldProtect) )
     {
         memcpy(ProcJmp, RealProcAddress, len);
-        memcpy(ProcJmp+ALLOC_JMP_Size+len, retbuf, sizeof(retbuf));
+        memcpy(ProcJmp+ALLOC_JMP_Size+len, &retbuf, sizeof(retbuf));
 //        VirtualProtect(ProcJmp, len+sizeof(retbuf), OldProtect, &OldProtect);
     }
     else
@@ -299,7 +318,7 @@ BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr
     // Inline Hook
     if( VirtualProtect(RealProcAddress, len, PAGE_EXECUTE_READWRITE, &OldProtect) )
     {
-        memcpy(RealProcAddress, TMP, len); // 写入jmp指令
+        memcpy(RealProcAddress, &TMPCode, len); // 写入jmp指令
         VirtualProtect(RealProcAddress, len, OldProtect, &OldProtect);
     }
     
@@ -441,4 +460,119 @@ BOOL UnHookProcByName(LPCTSTR DllName, LPCSTR ProcName, PVOID MyProcAddr)
         return FALSE;
     }
     return UnHookProcByAddress(ProcAddress, MyProcAddr);
+}
+
+
+//////////////////////////////////////////////////////////////////////////
+// 函数中间hook，特别小心
+#pragma pack(push, 1)
+typedef struct _MiddleHookStubProc{
+    unsigned char save_context[2]; // pushfd; pushad; 
+    unsigned char push_argv;   // push esp; 
+    jmpCode call_selfproc;   // call MyProcAddr;
+    unsigned char reset_context[2]; // popad; popfd; 
+    unsigned char original_code[ALLOC_JMP_Size+5];
+    pushretCode retbuf;
+    DWORD save_code_size;   // 原始hook字节数  
+    unsigned char save_code[20];
+}MiddleHookStubProc, *PMiddleHookStubProc;
+#pragma pack(pop)
+BOOL HookMiddleProc(LPVOID lpTargetAddress, PMiddleSubProc MyProcAddr)
+{
+    if (lpTargetAddress == NULL || MyProcAddr == NULL)
+    {
+        return FALSE;
+    }
+    DWORD OldProtect;
+    const DWORD iHookNeedLen = 5;
+
+    DWORD dwcopylen = 0;
+    LPVOID RealProcAddress = lpTargetAddress;
+    while(dwcopylen < iHookNeedLen)
+    {
+        DWORD i = LDE((unsigned char *)RealProcAddress, 0);
+        dwcopylen += i;
+        RealProcAddress = (PVOID)((DWORD)RealProcAddress + i);
+    }
+
+    PMiddleHookStubProc ProcStubBuffer = (PMiddleHookStubProc)AllocMemory(sizeof(MiddleHookStubProc)); 
+    if (ProcStubBuffer == NULL)
+    {
+        // 申请内存失败
+        return FALSE;
+    }
+    memset(ProcStubBuffer, 0x90, sizeof(MiddleHookStubProc));
+    ProcStubBuffer->save_context[0] = 0x9C; // pushfd; 
+    ProcStubBuffer->save_context[1] = 0x60; // pushad; 
+    ProcStubBuffer->push_argv = 0x54; // push esp; 
+    ProcStubBuffer->call_selfproc.operator_code = 0xE8;
+    ProcStubBuffer->call_selfproc.address = 
+        (LPBYTE)MyProcAddr - &ProcStubBuffer->call_selfproc.operator_code - 5;
+    ProcStubBuffer->reset_context[0] = 0x61; // popad; 
+    ProcStubBuffer->reset_context[1] = 0x9D; // popfd; 
+    ProcStubBuffer->save_code_size = dwcopylen;
+
+
+    // 跳转代码权限设定 
+    if ( VirtualProtect(ProcStubBuffer, sizeof(MiddleHookStubProc), PAGE_EXECUTE_READWRITE, &OldProtect) )
+    {
+        memcpy(ProcStubBuffer->original_code, lpTargetAddress, dwcopylen);
+        memcpy(ProcStubBuffer->save_code, lpTargetAddress, dwcopylen);
+        ProcStubBuffer->retbuf.operator_code = 0x68; // push 
+        ProcStubBuffer->retbuf.address = (DWORD)lpTargetAddress + dwcopylen;;
+        ProcStubBuffer->retbuf.ret_code = 0xC3; // retn 
+    }
+    else
+    {
+        return FALSE;
+    }
+
+    stubCode TMPCode = {0};
+    memset(&TMPCode, 0x90, sizeof(TMPCode));  // 最后用0x90填充 
+    TMPCode.jmp_code.operator_code = 0xE9;
+    ////////////////////////////////////////////////////////////
+    // 偏移地址 = 我们函数的地址 - 原API函数的地址 - 5（我们这条指令的长度）
+    TMPCode.jmp_code.address = (DWORD)ProcStubBuffer->save_context - (DWORD)lpTargetAddress - 5; 
+
+    // 修改一些偏移
+    ResetOffset(lpTargetAddress, ProcStubBuffer->original_code, dwcopylen);
+
+    // Inline Hook
+    if( VirtualProtect(lpTargetAddress, dwcopylen, PAGE_EXECUTE_READWRITE, &OldProtect) )
+    {
+        memcpy(lpTargetAddress, &TMPCode, dwcopylen); // 写入jmp指令
+        VirtualProtect(lpTargetAddress, dwcopylen, OldProtect, &OldProtect);
+    }
+    return TRUE;
+}
+
+BOOL UnHookMiddleProc(LPVOID lpTargetAddress, PMiddleSubProc MyProcAddr)
+{
+    if (lpTargetAddress == NULL)
+    {
+        return FALSE;
+    }
+
+    pstubCode TMPCode = (pstubCode)lpTargetAddress;
+    if (TMPCode->jmp_code.operator_code != 0xE9)
+    {
+        return FALSE;
+    }
+
+    PMiddleHookStubProc ProcStubBuffer = (PMiddleHookStubProc)
+        ((DWORD)lpTargetAddress + TMPCode->jmp_code.address + 5);
+    if (ProcStubBuffer->save_context[0] == 0x9C)
+    {
+        DWORD OldProtect = 0;
+        DWORD len = ProcStubBuffer->save_code_size;
+        if( VirtualProtect(lpTargetAddress, len, PAGE_EXECUTE_READWRITE, &OldProtect) )
+        {
+            memcpy(lpTargetAddress, ProcStubBuffer->save_code, len); // 恢复 
+//             Sleep(0);
+//             FreeMemory(ProcStubBuffer);
+            VirtualProtect(lpTargetAddress, len, OldProtect, &OldProtect);
+            return TRUE;
+        }
+    }
+    return FALSE;    
 }

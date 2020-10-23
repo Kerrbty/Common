@@ -9,10 +9,35 @@
 #include <tchar.h>
 #include "lde32.h"
 
+#ifndef _EXPORT_COMMON_CODE_
+    #ifdef _DEBUG
+        #pragma comment(lib, "myhook_d")
+    #else
+        #pragma comment(lib, "myhook")
+    #endif
+#endif
 
+// 函数头部 Inline Hook 
 BOOL HookProcByName(LPCTSTR DllName, LPCSTR ProcName, PVOID MyProcName); // hook指定的dll中的导出函数
 BOOL HookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr, LPVOID* NewStubAddr = NULL); // hook指定的地址
 BOOL HookProc(LPVOID addr, LPVOID MyProcAddr);  // 类似 DetourAttach 
+
+// 任意地址Inline Hook 
+typedef struct _context{
+    DWORD Edi;
+    DWORD Esi;
+    DWORD Ebp;
+    DWORD Esp;
+    DWORD Ebx;
+    DWORD Edx;
+    DWORD Ecx;
+    DWORD Eax;
+    DWORD dwflags;
+    DWORD others[1]; // hook头部的话，第一个数据是返回地址，接下去是参数 
+}context, *pcontext;
+typedef VOID (WINAPI* PMiddleSubProc)(pcontext pctx);
+BOOL HookMiddleProc(LPVOID lpTargetAddress, PMiddleSubProc MyProcAddr);
+BOOL UnHookMiddleProc(LPVOID lpTargetAddress, PMiddleSubProc MyProcAddr);
 
 
 BOOL UnHookProcByAddress(LPVOID ProcAddress, PVOID MyProcAddr);
