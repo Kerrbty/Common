@@ -6,7 +6,7 @@
 #define Deletehandle(_a) {if(_a != INVALID_HANDLE_VALUE) { CloseHandle(_a); _a = INVALID_HANDLE_VALUE;}}
 
 
-#define ALLOC_JMP_Size  60
+#define ALLOC_JMP_Size  36
 typedef signed __int64 int64;
 
 FunAddress Function[MAX_HOOK_NUM] = {0};
@@ -164,9 +164,9 @@ void ResetOffset(
             {
                 // 后面的代码全部后移3字节 
                 changelen += 3;
-                for (DWORD i=changelen-1; i>=item_len+5; i--)
+                for (DWORD i=changelen-1; i>=item_len+5+2; i--)
                 {
-                    ProcJmp[i] = ProcJmp[i-3];
+                    CopyCodeAddr[i] = CopyCodeAddr[i-3];
                 }
 
                 *ProcJmp = 0xE9;
@@ -186,16 +186,16 @@ void ResetOffset(
             {
                 // 后面的代码全部后移2*(jmp)长跳5字节 
                 changelen += 10;
-                for (DWORD i=changelen-1; i>=item_len+10; i--)
+                for (DWORD i=changelen-1; i>=item_len+10+2; i--)
                 {
-                    ProcJmp[i] = ProcJmp[i-10];
+                    CopyCodeAddr[i] = CopyCodeAddr[i-10];
                 }
 
                 *(ProcJmp+1) = 0x5;
                 // 原地址 + 偏移地址 = 正实地址，再加工成偏移当前下一条指令地址 
                 *(ProcJmp+2) = 0xE9; // 跳下一条指令 0xEB 0x05 
                 *(ProcJmp+7) = 0xE9; // 跳条件跳转指令 
-                if (item_len+2 < len) // 后续还有字节 
+                if (item_len+2 < changelen) // 后续还有字节 
                 {
                     *(PDWORD)(ProcJmp+3) = 0x5;
                 }
