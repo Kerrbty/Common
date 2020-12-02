@@ -82,5 +82,10 @@ VOID FreeString(LPVOID lpBuffer);
 #define FindLasteSymbol FindLasteSymbolA
 #endif
 
+#ifndef _DEBUG
+#pragma comment(lib, "StringFormat")
+#else
+#pragma comment(lib, "StringFormat_d")
+#endif
 
 #endif  // _FORMAT_LANGUAGE_STRING_H_

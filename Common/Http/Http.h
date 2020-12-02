@@ -61,6 +61,8 @@ public:
 
     BOOL SetIgnoreCert(BOOL bIgnore);  // 忽略HTTPS证书合法性 TRUE 表示忽略,返回原来设置 
 
+    BOOL SetDisableReceive(BOOL bDisable);  // 禁用302重定向 
+
     // 提交请求的方式 GET/POST， 默认为 GET 
     void SetPost(BOOL bPost = TRUE); // True 为 Post， False 为 Get 
 
@@ -94,23 +96,26 @@ public:
     // 重置所有信息,复用类对象 
     void Reset();   // 清除本来所有数据，包括Cookies 
 
+    BOOL AddHeaderReqStr(LPWSTR RequestName, LPWSTR RequestValue);
+
 protected:
     void Initialize(); // 初始化对象，构造函数比较多，以防修改以后漏掉某个初始化 
     BOOL GetHttpRequestHeader();  // 发送请求信息,并获取头部信息 
     void CloseRequest();  // 请求头信息 
-    BOOL AddHeaderReqStr(LPWSTR RequestName, LPWSTR RequestValue);
 
 public:
     const WCHAR* GetReturnCodeIdW();  // "200" "404" "500"
     const WCHAR* GetReturnTextIdW();  // "OK"
     const WCHAR* GetDataLenthW();     // 返回正文数据长度(除去头部) 
     const WCHAR* GetSetCookieW();     // 返回新的 Cookie WINHTTP_QUERY_SET_COOKIE/HTTP_QUERY_SET_COOKIE
+    const WCHAR* GetLocationW();
 
     const char* GetReturnCodeIdA();  // "200" "404" "500"
     const char* GetReturnTextIdA();  // "OK"
     const char* GetDataLenthA();     // 返回正文数据长度(出去头部) 
     DWORD       GetData(LPBYTE lpBuf, DWORD dwLenth, BOOL AutoChgUtf8 = TRUE);  // 获取http服务器返回正文  
     const char* GetSetCookieA();  
+    const char* GetLocationA();
     static BOOL UnzipData(LPBYTE lpInData, DWORD InLenth, LPBYTE lpOutData, DWORD OutLenth, BOOL AutoChgUtf8);  // gzip解压数据 
 
     // WINHTTP_QUERY_ETAG   ->  ETag: "lr0ZzoawyyhskvuleG6PNUPXjzKs" 
@@ -128,6 +133,7 @@ private:
     DWORD  m_dwPostSize;
 
     BOOL   m_Ignore_Cert;
+    BOOL   m_Disable_Receive;  // 禁用重定向，默认自动重定向 
     LPWSTR m_AcceptLanguage;
     LPWSTR m_ContentType;
     LPWSTR m_cookies;
@@ -148,5 +154,11 @@ private:
     char*  m_tmp_string;  // 给用户返回的临时数据 
     LPWSTR m_tmp_header;
 };
+
+#ifdef _DEBUG
+#pragma comment(lib, "Http_d.lib")
+#else
+#pragma comment(lib, "Http.lib")
+#endif
 
 #endif // _CHTTP_ZXLY_2019_HEADER_HH_H

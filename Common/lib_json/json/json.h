@@ -12,4 +12,10 @@
 #include "writer.h"
 #include "features.h"
 
+#ifdef _DEBUG
+#pragma comment(lib, "libjson_d.lib")
+#else
+#pragma comment(lib, "libjson.lib")
+#endif
+
 #endif // JSON_JSON_H_INCLUDED

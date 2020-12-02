@@ -163,6 +163,20 @@ BOOL SetRequestIgnoreCert(HINTERNET hRequest)
 #endif
 }
 
+BOOL SetDisableCertRedirects(HINTERNET hRequest)
+{
+    DWORD dwFlags = WINHTTP_DISABLE_REDIRECTS;
+    DWORD dwBuffLen = sizeof(dwFlags);
+
+#ifdef USE_WINHTTP        
+    WinHttpQueryOption (hRequest, WINHTTP_OPTION_DISABLE_FEATURE, (LPVOID)&dwFlags, &dwBuffLen);
+    dwFlags |= WINHTTP_DISABLE_REDIRECTS;
+
+    return WinHttpSetOption(hRequest, WINHTTP_OPTION_DISABLE_FEATURE, &dwFlags, sizeof (dwFlags) );
+#else
+    return FALSE;
+#endif  
+}
 
 BOOL SendRequest(HINTERNET hRequest, const void* body, DWORD size)
 {
@@ -270,6 +284,7 @@ void CHttp::Initialize()
     m_dwPostSize = 0;
 
     m_Ignore_Cert = FALSE;
+    m_Disable_Receive = FALSE;
     m_cookies = NULL;
     m_Referer = NULL;
     m_Accept = FALSE;
@@ -469,6 +484,12 @@ BOOL CHttp::SetIgnoreCert(BOOL bIgnore)
     return bset;
 }
 
+BOOL CHttp::SetDisableReceive(BOOL bDisable)
+{
+    BOOL bset = m_Disable_Receive;
+    m_Disable_Receive = bDisable;
+    return bset;
+}
 
 // 提交请求的方式 GET/POST， 默认为 GET 
 void CHttp::SetPost(BOOL bPost) // True 为 Post， False 为 Get 
@@ -741,6 +762,11 @@ BOOL CHttp::GetHttpRequestHeader()
         SetRequestIgnoreCert(m_hRequest);
     }
 
+    if (m_Disable_Receive)
+    {
+        SetDisableCertRedirects(m_hRequest);
+    }
+
     // 发送请求 
     // Send get/post data. 
     if (SendRequest(m_hRequest, m_PostData, m_dwPostSize))
@@ -753,6 +779,32 @@ BOOL CHttp::GetHttpRequestHeader()
         }
     }
     return FALSE;
+}
+
+const WCHAR* CHttp::GetLocationW()  // "200" "404" "500"
+{
+    if (!m_IsRequest)
+    {
+        GetHttpRequestHeader();
+    }
+    if (m_tmp_header)
+    {
+        FreeMemory(m_tmp_header);
+        m_tmp_header = NULL;
+    }
+
+    DWORD cbSize = MAX_PATH;
+    m_tmp_header = (LPWSTR)AllocMemory(cbSize*sizeof(WCHAR));
+#ifdef USE_WINHTTP
+    if ( QueryInfo(m_hRequest, WINHTTP_QUERY_LOCATION, m_tmp_header, &cbSize) )
+#else // USE_WINHTTP
+    if ( QueryInfo(m_hRequest, HTTP_QUERY_LOCATION, m_tmp_header, &cbSize) )
+#endif // USE_WINHTTP
+
+    {
+        return m_tmp_header;
+    }
+    return NULL;
 }
 
 const WCHAR* CHttp::GetReturnCodeIdW()  // "200" "404" "500"
@@ -914,6 +966,21 @@ const WCHAR* CHttp::GetSetCookieW()     // 返回新的 Cookie WINHTTP_QUERY_SET_COO
     return NULL;
 }
 
+const char* CHttp::GetLocationA()  // "200" "404" "500"
+{
+    LPCWSTR lpData = GetLocationW();
+    if (lpData != NULL)
+    {
+        if (m_tmp_string)
+        {
+            FreeMemory(m_tmp_string);
+            m_tmp_string = NULL;
+        }
+        m_tmp_string = WideToMul(lpData);
+        return m_tmp_string;
+    }
+    return NULL;
+}
 
 const char* CHttp::GetReturnCodeIdA()  // "200" "404" "500"
 {
