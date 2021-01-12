@@ -165,7 +165,7 @@ BOOL SetRequestIgnoreCert(HINTERNET hRequest)
 
 BOOL SetDisableCertRedirects(HINTERNET hRequest)
 {
-    DWORD dwFlags = WINHTTP_DISABLE_REDIRECTS;
+    DWORD dwFlags = 0;
     DWORD dwBuffLen = sizeof(dwFlags);
 
 #ifdef USE_WINHTTP        
