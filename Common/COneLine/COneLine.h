@@ -25,5 +25,10 @@ private:
 };
 
 
+#ifdef _DEBUG
+#pragma comment(lib, "COneLine_d.lib")
+#else
+#pragma comment(lib, "COneLine.lib")
+#endif
 
 #endif // _READ_ONE_LINE_HEADER_HH_

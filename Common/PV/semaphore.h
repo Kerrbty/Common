@@ -16,4 +16,10 @@ private:
     HANDLE m_semaphore;
 };
 
+#ifdef _DEBUG
+#pragma comment(lib, "PV_d.lib")
+#else
+#pragma comment(lib, "PV.lib")
+#endif
+
 #endif  // _SEMAPHORE_HEADER_FILE_H_

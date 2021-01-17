@@ -18,4 +18,10 @@ private:
 
 };
 
+#ifdef _DEBUG
+#pragma comment(lib, "PV_d.lib")
+#else
+#pragma comment(lib, "PV.lib")
+#endif
+
 #endif // _LOCK_HEADER_FILE_H_
