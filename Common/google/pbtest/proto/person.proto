@@ -1,0 +1,5 @@
+message Person {
+    required int32 id = 1; // 编号 
+    required string name = 2; 
+    required string email = 3;
+}
